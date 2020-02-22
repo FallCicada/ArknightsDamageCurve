@@ -1,6 +1,5 @@
 import copy
 import random
-from math import ceil
 
 cp = copy.deepcopy
 random.seed(114514)
@@ -302,7 +301,7 @@ class StateData:
             self.atk_speed_up = 500
         real_atk_interval = (self.atk_time + self.atk_time_add_modifier) * (1 + self.atk_time_mul_modifier)
         real_atk_time = real_atk_interval * 100 / (100 + self.atk_speed_up)
-        return ceil(real_atk_time * 30)
+        return round(real_atk_time * 30)
 
     def save_temp(self, defense, magic_resistance):
         if self.damage <= 0:
@@ -313,7 +312,7 @@ class StateData:
             self.dot_damage = self.dot_damage_raw * self.atk_scale * (100 - magic_resistance) / 100 * self.dmg_scale
         else:
             self.dot_damage = self.dot_damage_raw * self.atk_scale * 0.05 * self.dmg_scale
-        self.dot_frame = ceil(self.dot_time * 30)
+        self.dot_frame = round(self.dot_time * 30)
         # print("\tAttack: %-4d, Attack buff: %-3.0f%%, Attack Scale: %-3.0f%%, Damage buff: %-3.0f%% ;"
         #       % (self.atk, self.atk_up * 100, self.atk_scale * 100, self.dmg_scale * 100))
         # print("\tDamage per attack: %-7.1f" % self.damage, end="; ")
@@ -1590,10 +1589,10 @@ class BluePoison(CharacterData):
                             dot_remain = S.dot_frame
                     if self.other_target_dot_damage > 0:
                         if oth_dot_remain > 0:
-                            oth_dot_remain = ceil(self.other_target_dot_duration * 30)
+                            oth_dot_remain = round(self.other_target_dot_duration * 30)
                         else:
                             oth_dot_dmg = self.other_target_dot_damage
-                            oth_dot_remain = ceil(self.other_target_dot_duration * 30)
+                            oth_dot_remain = round(self.other_target_dot_duration * 30)
                 else:
                     damage += N.damage * N.atk_times * N.equivalent_target_num
                     atk_cooldown = N.frame
@@ -1620,8 +1619,8 @@ class Platinum(CharacterData):
         self.max_atk_interval = 0
 
     def calc_atk_scale_modifier(self, atk_interval_frame, minAI, maxAI, minAS, maxAS):
-        minAF = ceil(minAI * 30)
-        maxAF = ceil(maxAI * 30)
+        minAF = round(minAI * 30)
+        maxAF = round(maxAI * 30)
         if atk_interval_frame <= minAF:
             return minAS
         elif atk_interval_frame >= maxAF:

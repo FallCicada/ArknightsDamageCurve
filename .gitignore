@@ -133,3 +133,7 @@ dmypy.json
 
 # pytype static type analyzer
 .pytype/
+
+# ignore images and data
+figure
+data
