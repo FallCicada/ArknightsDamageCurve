@@ -27,7 +27,7 @@
 	python -m pip install -U pip 
 	python -m pip install -U matplotlib
 	```
-* 需要 [思源黑体](https://github.com/adobe-fonts/source-han-sans) *字体*  <br> *matplotlib* 需要 TrueTypeFont (TTF) 文件, 但源文件没有TTF版本。所以我附带了一份我自己转换的 `SourceHanSansSC-Normal.ttf`
+* 需要 [思源黑体](https://github.com/adobe-fonts/source-han-sans) *字体*  <br> *matplotlib* 需要 TrueTypeFont (TTF) 文件, 但源文件没有TTF版本。所以我附带了一份我自己转换的 `SourceHanSansSC-Normal.ttf` <br> 由于中文字体文件比较大 (19.2MB)，所以也传到了百度网盘上，不必通过Git下载：[思源黑体TTF](https://pan.baidu.com/s/1KKjovduK4FfdjBbA8MnxfA) 提取码: fgy3  
 * 需要配置 *matplotlib* 来让它支持中文字体 <br> 你可以在知乎问题 [https://www.zhihu.com/question/25404709](https://www.zhihu.com/question/25404709) 里找到 Windows 和 Mac 中的 *matplotlib* 的中文配置方法
 * 在环境配置结束后，Clone or Download 这个文件夹至你的电脑，然后即可使用命令行或你的IDE运行python代码
 
@@ -120,12 +120,13 @@
 > *默认的曲线颜色参考了干员精二立绘里，干员的替身的颜色*  
 
 ### 示例图片
+注：这俩图片可能需要一段时间才能加载出来
 
 图片部分元素展示：
-<img src="README/Example1.png" width="100%" id="example1">
+<img src="README/Example1.jpg" width="100%" id="example1">
 
 抛光线效果展示：
-<img src="README/PolishLineExample.png" width="100%" id="example2">
+<img src="README/PolishLineExample.jpg" width="100%" id="example2">
 
 
 <span id="Requirements-Eng"></span>
