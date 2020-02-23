@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+# coding:utf-8
+
 import copy
 import random
 
@@ -145,7 +148,7 @@ enemy_dict = {
 target_num_dict = {
     "超小半径圆溅射": 1.2,  # 麦哲伦3
     "小半径圆溅射": 1.9,  # 白雪2
-    "中半径圆溅射": 2.7,  # 普通群狙, 普通群法
+    "中半径圆溅射": 2.6,  # 普通群狙, 普通群法
     "大半径圆溅射": 3.2,  # 空爆1, 天火2
     "超大半径圆溅射": 3.6,  # 陨星1
 
@@ -383,13 +386,13 @@ class CharacterData:
         SETN = self.SkillData.equivalent_target_num
         if NETN != 1 and SETN != 1:
             if NETN == SETN:
-                self.multi_target_desc = "打%s" % NETN
+                self.multi_target_desc = "打%.2f" % NETN
             else:
-                self.multi_target_desc = "普攻打%s,技能打%s" % (NETN, SETN)
+                self.multi_target_desc = "普攻打%.2f,技能打%.2f" % (NETN, SETN)
         elif NETN != 1:
-            self.multi_target_desc = "普攻打%s" % NETN
+            self.multi_target_desc = "普攻打%.2f" % NETN
         elif SETN != 1:
-            self.multi_target_desc = "技能打%s" % SETN
+            self.multi_target_desc = "技能打%.2f" % SETN
 
     def simulate(self, defense, magic_resistance):
         damage_node = list()
@@ -2347,8 +2350,6 @@ def modify_data(f, stage, multi_target=False):
 
     :param f:                   file object
     :param stage:               <str> character stage
-    :param defense:             <int> enemy defense
-    :param magic_resistance:    <int> enemy magic resistance
     :param multi_target:        <bool> whether multi-target mode is on
     :return:    char_dict:      <dict> a dict containing characters
                                 Format:
@@ -2383,7 +2384,8 @@ def modify_data(f, stage, multi_target=False):
             B, N, S = load_data(row)
             tmp = TalentAtkBuff(name, skill_order, basic_info_dict=B, normal_info_dict=N, skill_info_dict=S)
             tmp.normal_trig_prob = eval(row["Talent Dict"]).get("prob", 0.0)
-            tmp.skill_trig_prob = eval(row["Talent Dict"]).get("prob", 0.0) * eval(row["Skill Dict"]).get("talent_scale", 1.0)
+            tmp.skill_trig_prob = eval(row["Talent Dict"]).get("prob", 0.0) * eval(row["Skill Dict"]).get(
+                "talent_scale", 1.0)
             tmp.TalentNormalData.penetration_ratio = 1.0
             tmp.TalentSkillData.penetration_ratio = 1.0
             char_dict[key] = tmp
@@ -2391,7 +2393,8 @@ def modify_data(f, stage, multi_target=False):
             B, N, S = load_data(row)
             tmp = TalentAtkBuff(name, skill_order, basic_info_dict=B, normal_info_dict=N, skill_info_dict=S)
             tmp.normal_trig_prob = eval(row["Talent Dict"]).get("prob", 0.0)
-            tmp.skill_trig_prob = eval(row["Talent Dict"]).get("prob", 0.0) * eval(row["Skill Dict"]).get("talent_scale", 1.0)
+            tmp.skill_trig_prob = eval(row["Talent Dict"]).get("prob", 0.0) * eval(row["Skill Dict"]).get(
+                "talent_scale", 1.0)
             tmp.TalentNormalData.penetration_ratio = 1.0
             tmp.TalentSkillData.penetration_ratio = 1.0
             char_dict[key] = tmp
@@ -2880,7 +2883,8 @@ def modify_data(f, stage, multi_target=False):
             tmp = Eyjafjalla(name, skill_order, basic_info_dict=B, normal_info_dict=N, skill_info_dict=S)
             tmp.magic_damage()
             tmp.SecondSkillData.dmg_type = "magic"
-            tmp.init_sp_gain = (eval(row["Talent Dict"]).get("sp_min", 0) + eval(row["Talent Dict"]).get("sp_max", 0)) / 2
+            tmp.init_sp_gain = (eval(row["Talent Dict"]).get("sp_min", 0) + eval(row["Talent Dict"]).get("sp_max",
+                                                                                                         0)) / 2
             tmp.SkillData.atk_speed_up += eval(row["Skill Dict"]).get("amgoat_s_1[a].attack_speed", 0)
             tmp.SecondSkillData.atk_speed_up += eval(row["Skill Dict"]).get("amgoat_s_1[b].attack_speed", 0)
             tmp.SecondSkillData.atk_up += eval(row["Skill Dict"]).get("amgoat_s_1[b].atk", 0)
@@ -2893,7 +2897,8 @@ def modify_data(f, stage, multi_target=False):
             tmp.TalentSkillData.dmg_type = "magic"
             tmp.replace_basic_attack()
             tmp.sp_recovery_block_time = 1.2
-            tmp.init_sp_gain = (eval(row["Talent Dict"]).get("sp_min", 0) + eval(row["Talent Dict"]).get("sp_max", 0)) / 2
+            tmp.init_sp_gain = (eval(row["Talent Dict"]).get("sp_min", 0) + eval(row["Talent Dict"]).get("sp_max",
+                                                                                                         0)) / 2
             tmp.mr_reduction_ratio = eval(row["Skill Dict"]).get("magic_resistance", 0)
             tmp.mr_reduction_duration = eval(row["Skill Dict"]).get("duration", 0)
             tmp.SkillData.equivalent_target_num = 2.0
@@ -2907,7 +2912,8 @@ def modify_data(f, stage, multi_target=False):
             B, N, S = load_data(row)
             tmp = CharacterData(name, skill_order, basic_info_dict=B, normal_info_dict=N, skill_info_dict=S)
             tmp.magic_damage()
-            tmp.init_sp_gain = (eval(row["Talent Dict"]).get("sp_min", 0) + eval(row["Talent Dict"]).get("sp_max", 0)) / 2
+            tmp.init_sp_gain = (eval(row["Talent Dict"]).get("sp_min", 0) + eval(row["Talent Dict"]).get("sp_max",
+                                                                                                         0)) / 2
             if multi_target:
                 target_num_key = "3格菱形打%.0f" % eval(row["Skill Dict"]).get("attack@max_target", 3.0)
                 tmp.SkillData.equivalent_target_num = target_num_dict[target_num_key]
@@ -3721,7 +3727,8 @@ def modify_data(f, stage, multi_target=False):
             tmp = CharacterData(name, skill_order, basic_info_dict=B, normal_info_dict=N, skill_info_dict=S)
             tmp.SkillData.dmg_type = "magic"
             tmp.sp_type = "auto"
-            tmp.sp_recovery = (eval(row["Talent Dict"]).get("sp", 0.0) + 1.0) * Charge_on_defense_equivalent_charge_speed
+            tmp.sp_recovery = (eval(row["Talent Dict"]).get("sp",
+                                                            0.0) + 1.0) * Charge_on_defense_equivalent_charge_speed
             tmp.SkillData.stun = eval(row["Skill Dict"]).get("sp", 0.0)
             if multi_target:
                 target_num_key = "2格打%.0f" % eval(row["Skill Dict"]).get("attack@max_target", 3)

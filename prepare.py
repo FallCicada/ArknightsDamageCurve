@@ -1,3 +1,11 @@
+#!/usr/bin/env python
+# coding:utf-8
+
+"""
+This code load raw data (json file) and convert it to CSV file.
+The CSV file is saved as `raw/RawData.csv` and contains info which will be used by plotting.
+"""
+
 import json
 import re
 import csv
@@ -524,6 +532,7 @@ def main():
                         row.extend(used_info)
                         print(row)
                         f.writerow(row)
+
 
 if __name__ == "__main__":
     main()

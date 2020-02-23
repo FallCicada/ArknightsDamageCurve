@@ -1,8 +1,10 @@
+#!/usr/bin/env python
+# coding:utf-8
+
 import csv
 import os
 import matplotlib.pyplot as plt
 import matplotlib.image as image
-from matplotlib import font_manager
 from matplotlib.ticker import *
 from matplotlib.offsetbox import *
 from character import *
@@ -11,6 +13,8 @@ from character import *
 # You may change fonts. Just follow instructions of Matplotlib
 # https://www.zhihu.com/question/25404709 may help
 # Remember to use "ttf" rather than "ttc" or "otf", otherwise it is impossible to generate "*.pdf" file
+plt.rcParams["font.sans-serif"] = ["Source Han Sans SC"]
+plt.rcParams["axes.unicode_minus"] = False
 ExtraGiantFont = {"family": "Source Han Sans SC", "size": 20}
 GiantFont = {"family": "Source Han Sans SC", "size": 16}
 BigDescriptionFont = {"family": "Source Han Sans SC", "size": 12}
@@ -109,8 +113,8 @@ def plot_curve(char_dict, stage, write_file, axes, pick_list, defense, mr,
         # Filter characters
         _, name, skill = desc.split("-")
 
-        if pick_list and ((name not in pick_list and "%s%s" % (name, skill[0]) not in pick_list) or
-                          (baseline is not None and "%s-%s技能" % (name, skill[0]) != baseline)):
+        if pick_list and ((name not in pick_list and "%s%s" % (name, skill[0]) not in pick_list) and
+                          "%s-%s技能" % (name, skill[0]) != baseline):
             continue
 
         # Plot damage curve for each character
@@ -145,7 +149,7 @@ def plot_curve(char_dict, stage, write_file, axes, pick_list, defense, mr,
     return legend_list, slay_list
 
 
-def plot_legend(axes, legend_list, damage_baseline=100000, ignore_polish=False, multi_target_lable=False):
+def plot_legend(axes, legend_list, damage_baseline=100000, ignore_polish=False, multi_target_label=False):
     """
     Plot legends w.r.t. legend list on given axes
 
@@ -154,7 +158,7 @@ def plot_legend(axes, legend_list, damage_baseline=100000, ignore_polish=False, 
     :param damage_baseline: <int> the baseline damage
     :param ignore_polish:   <bool> all legends with damage lower than `polish_line` will be ignored
                                 Details refer to `Overall parameters introduction`
-    :param multi_target_lable:  <bool> whether to add an extra legend showing how many targets one will hit per attack
+    :param multi_target_label:  <bool> whether to add an extra legend showing how many targets one will hit per attack
 
     :return:    max_damage: <int> maximal damage among all characters
     """
@@ -235,7 +239,7 @@ def plot_legend(axes, legend_list, damage_baseline=100000, ignore_polish=False, 
             axes.text(359, text_y_pos - max_damage / 120, name, fontdict=SmallDescriptionFont)
         axes.text(405, text_y_pos - max_damage / 120, dmg_value, fontdict=DescriptionFont)
 
-        if multi_target_lable:
+        if multi_target_label:
             axes.plot([425.5, 452.5], [text_y_pos, text_y_pos], c=color_dict[char.name], alpha=0.2, ls="-", lw=8)
             desc = char.multi_target_desc
             if desc != "单体攻击":
@@ -243,7 +247,7 @@ def plot_legend(axes, legend_list, damage_baseline=100000, ignore_polish=False, 
             else:
                 axes.text(424.7, text_y_pos - max_damage / 200, desc, fontdict=SmallDescriptionFont, alpha=0.5)
 
-    if multi_target_lable:
+    if multi_target_label:
         axes.plot([426.5, 450], [max_damage * 41 / 40, max_damage * 41 / 40], c="black", alpha=0.1, ls="-", lw=9.3)
         axes.text(426, max_damage * 611 / 600, "设定攻击目标数", fontdict=MediumSmallDescriptionFont)
 
@@ -343,7 +347,7 @@ def find_available_filename(stage, pick_list_name, multi_target_desc, enemy=None
         cnt = 0
         while os.path.exists(file_name + ".pdf") or os.path.exists(file_name + ".png"):
             cnt += 1
-            file_name = "figure/%s_%s防_%s法抗_%s_%s(%s)" % (stage, enemy, pick_list_name, multi_target_desc, cnt)
+            file_name = "figure/%s_%s防_%s法抗_%s_%s(%s)" % (stage, defense, mr, pick_list_name, multi_target_desc, cnt)
     return file_name
 
 
@@ -498,10 +502,12 @@ def plot(stage, pick_list, pick_list_name, baseline, enemy=None, defense=300, mr
     else:
         target_num, target_hp = None, None
         show_slay_line = False
-        write_file = open("data/DamageRecord_%s_%s_%s_%s.txt" % (stage, defense, mr, multitarget2str[multi_target]), "w")
-        file_name = find_available_filename(stage, pick_list_name, multitarget2str[multi_target], defense=defense, mr=mr)
+        write_file = open("data/DamageRecord_%s_%s_%s_%s.txt" % (stage, defense, mr, multitarget2str[multi_target]),
+                          "w")
+        file_name = find_available_filename(stage, pick_list_name, multitarget2str[multi_target], defense=defense,
+                                            mr=mr)
     char_dict = modify_data(f, stage, multi_target)
-    
+
     # Configure Matplotliba
     title = "%s，%s防御，%s法抗，300秒内输出曲线，%s" % (stage, defense, mr, multitarget2str[multi_target])
     configure_mpl(ax, title, multi_target)
