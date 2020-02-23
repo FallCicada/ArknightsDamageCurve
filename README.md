@@ -598,6 +598,15 @@
     <td><font color=gray size=2>唱沙</font></td>
     <td colspan="9"><font color=gray size=2>暂无</font></td> </tr>
 </table>
+<table>
+<tr> <td align=center>溅射型群攻<br>圆溅射</td> <td align=center>超小半径</td> <td align=center>小半径</td> <td align=center>中半径</td> <td align=center>大半径</td> <td align=center>超大半径</td> </tr>
+<tr> <td align=center>预设攻击目标数</td> <td align=center>1.2</td> <td align=center>1.9</td> <td align=center>2.6</td> <td align=center>3.2</td> <td align=center>3.6</td></tr>
+<tr> <td rowspan="3" align=center>干员列表</td> <td>麦哲伦 (3)<br>常态无人机</td> <td>白雪 (2)</td> <td>普通群狙</td> <td>空爆 (1)</td> <td>陨星 (1)</td> </tr>
+<tr> <td></td> <td>陨星 (2)</td> <td>普通群法</td> <td>天火 (2)</td> <td></td> </tr>
+<tr> <td></td> <td></td> <td>艾雅法拉 (2)</td> <td></td> <td></td> </tr>
+<tr> <td align=center>特殊干员</td> <td>守林人 (2) <br> 战术电台 2发</td> <td>4.2</td> <td>守林人 (2) <br> 战术电台 3发</td> <td>5.5</td> <td></td> </tr>
+</table>
+
 
 <span id="攻击范围对照-中文"></span>
 #### 攻击范围对照表
