@@ -1,19 +1,3 @@
-<style type="text/css">
-.tight-table {
-    border-collapse: collapse;
-}
-.tight-table tr th, .tight-table tr td {
-  border-width: 1px;
-  padding: 3px;
-  text-align: center;
-  white-space: nowrap;
-}
-.g {
-  color: gray;
-  font-size: 0.8em;
-}
-</style>
-
 # ArknightsDamageCurve-明日方舟伤害曲线模拟器
 
  A simple *python* script to generate damage curve for game **Arknights**
@@ -189,98 +173,434 @@
 
 <span id="攻击目标数-中文"></span>
 #### 攻击目标数表格
-
-<table class="tight-table">
+<table>
   <tr> <th width="10%">文本描述</th><th width="10%">范围代号</th><th width="10%">干员</th><th width="25%">攻击范围<br>对应干员</th><th width="5%">打2</th><th width="5%">打3</th><th width="5%">打4</th><th width="5%">打5</th><th width="5%">打6</th><th width="5%">打7</th><th width="5%">群攻</th> </tr>
-  <tr> <td>0格</td><td>0-1</td><td colspan="2">火神 (2)<br>格拉尼 (2)<br>坚雷 (2)<br>麦哲伦 (2) - 技能</td><td bgcolor="#E0FFE0">1.3</td><td bgcolor="#E0FFE0">1.87</td><td class="g">2.2</td><td class="g">2.31</td><td class="g">2.35</td><td class="g">2.38</td><td bgcolor="#E0FFE0">2.4</td> </tr>
-  <tr> <td>1格</td><td>1-1</td><td colspan="2">群卫<br>星极 (2)<br>星熊 (2)<br>煌 (3) - 切割</td><td bgcolor="#E0FFE0">1.4</td><td bgcolor="#E0FFE0">2</td><td class="g">2.4</td><td class="g">2.57</td><td class="g">2.63</td><td class="g">2.67</td><td bgcolor="#E0FFE0">2.7</td> </tr>
-  <tr> <td>2格</td><td>2-2</td><td colspan="2">煌 (2)<br>雷蛇 (2)<br>赫拉格 (3, 1~7级)</td><td bgcolor="#E0FFE0">1.5</td><td bgcolor="#E0FFE0">2.12</td><td bgcolor="#E0FFE0">2.52</td><td class="g">2.7</td><td class="g">2.85</td><td class="g">2.9</td><td class="g">2.95</td> </tr>
-  <tr> <td>3格</td><td>3-2</td><td colspan="2">暴行 (2)<br>布洛卡 (2)<br>赫拉格 (3, 8~10级)</td><td bgcolor="#E0FFE0">1.55</td><td bgcolor="#E0FFE0">2.21</td><td bgcolor="#E0FFE0">2.61</td><td bgcolor="#E0FFE0">2.82</td><td class="g">3.02</td><td class="g">3.08</td><td class="g">3.15</td> </tr>
-  <tr> <td>4格</td><td>4-1</td><td colspan="2">暗索 (2)</td><td bgcolor="#E0FFE0">1.6</td><td class="g">2.28</td><td class="g">2.71</td><td class="g">2.93</td><td class="g">3.14</td><td class="g">3.21</td><td class="g">3.3</td> </tr>
-  <tr> <td>5格</td><td>5-1</td><td colspan="2">伊芙利特</td><td class="g">1.65</td><td class="g">2.35</td><td class="g">2.8</td><td class="g">3.03</td><td class="g">3.2</td><td class="g">3.3</td><td bgcolor="#E0FFE0">3.4</td> </tr>
-  <tr> <td class="g">2格远卫</td><td class="g">2-3</td><td colspan="2" class="g">精零 远卫<br>精零 群法<br>精零 近狙</td><td class="g">1.6</td><td class="g">2.3</td><td class="g">2.75</td><td class="g">2.97</td><td class="g">3.19</td><td class="g">3.28</td><td class="g">3.35</td> </tr>
-  <tr> <td>3格远卫</td><td>3-12</td><td colspan="2">拉普兰德 (2)<br>陈 (2)</td><td bgcolor="#E0FFE0">1.65</td><td class="g">2.35</td><td bgcolor="#E0FFE0">2.83</td><td bgcolor="#E0FFE0">3.07</td><td bgcolor="#E0FFE0">3.25</td><td bgcolor="#E0FFE0">3.35</td><td class="g">3.45</td> </tr>
-  <tr> <td class="g">1格扇形</td><td class="g">1-2</td><td colspan="2" class="g">银灰 (2)</td><td class="g">1.5</td><td class="g">2.12</td><td class="g">2.54</td><td class="g">2.74</td><td class="g">2.87</td><td class="g">2.94</td><td class="g">3</td> </tr>
-  <tr> <td class="g">2格扇形</td><td class="g">2-1</td><td colspan="2" class="g">暂无</td><td class="g">1.65</td><td class="g">2.37</td><td class="g">2.83</td><td class="g">3.07</td><td class="g">3.24</td><td class="g">3.35</td><td class="g">3.45</td> </tr>
-  <tr> <td class="g">2+1格扇形</td><td class="g">3-11</td><td colspan="2" class="g">暂无</td><td class="g">1.67</td><td class="g">2.4</td><td class="g">2.86</td><td class="g">3.1</td><td class="g">3.27</td><td class="g">3.38</td><td class="g">3.48</td> </tr>
-  <tr> <td>3格扇形</td><td>3-7</td><td colspan="2">银灰 (3)</td><td class="g">1.75</td><td bgcolor="#E0FFE0">2.5</td><td bgcolor="#E0FFE0">2.95</td><td bgcolor="#E0FFE0">3.25</td><td bgcolor="#E0FFE0">3.52</td><td class="g">3.7</td><td class="g">3.85</td> </tr>
-  <tr> <td>1格菱形</td><td>x-5</td><td colspan="2">推进之王 (2)</td><td class="g">1.55</td><td class="g">2.15</td><td class="g">2.58</td><td class="g">2.78</td><td class="g">2.95</td><td class="g">3.03</td><td bgcolor="#E0FFE0">3.1</td> </tr>
-  <tr> <td>2格菱形</td><td>x-1</td><td colspan="2">德克萨斯 (2)</td><td class="g">1.7</td><td class="g">2.42</td><td class="g">2.9</td><td class="g">3.15</td><td class="g">3.35</td><td class="g">3.46</td><td bgcolor="#E0FFE0">3.55</td> </tr>
-  <tr> <td>药物配置</td><td>x-2</td><td colspan="2">真理 (2)</td><td bgcolor="#E0FFE0">1.78</td><td bgcolor="#E0FFE0">2.53</td><td class="g">3.04</td><td class="g">3.38</td><td class="g">3.65</td><td class="g">3.81</td><td class="g">3.95</td> </tr>
-  <tr> <td>3格菱形</td><td>x-3</td><td colspan="2">艾雅法拉 (3)<br>格劳克斯 (2)</td><td>1.8</td><td bgcolor="#E0FFE0">2.55</td><td bgcolor="#E0FFE0">3.05</td><td bgcolor="#E0FFE0">3.4</td><td bgcolor="#E0FFE0">3.75</td><td class="g-td">3.98</td><td bgcolor="#E0FFE0">4.15</td> </tr>
-  <tr> <td class="g">1格方形</td><td class="g">x-4</td><td colspan="2" class="g">精零 空</td><td class="g">1.62</td><td class="g">2.32</td><td class="g">2.76</td><td class="g">3</td><td class="g">3.2</td><td class="g">3.28</td><td class="g">3.35</td> </tr>
-  <tr> <td>精一群法</td><td>3-6</td><td colspan="2">莫斯提马 (2)<br>煌 (3) - 爆裂</td><td class="g">1.65</td><td class="g">2.38</td><td class="g">2.87</td><td class="g">3.13</td><td class="g">3.3</td><td class="g">3.42</td><td bgcolor="#E0FFE0">3.52</td> </tr>
-  <tr> <td>精零快狙</td><td>3-1</td><td colspan="2">蓝毒 (1)</td><td bgcolor="#E0FFE0">1.68</td><td class="g">2.42</td><td class="g">2.92</td><td class="g">3.17</td><td class="g">3.34</td><td class="g">3.46</td><td class="g">3.56</td> </tr>
-  <tr> <td>精一快狙</td><td>3-3</td><td colspan="2">蓝毒 (1, 2)<br>红云 (2)<br>流星 (2)<br>远山 (2)</td><td bgcolor="#E0FFE0">1.7</td><td bgcolor="#E0FFE0">2.44</td><td class="g">2.92</td><td bgcolor="#E0FFE0">3.2</td><td class="g">3.4</td><td class="g">3.52</td><td bgcolor="#E0FFE0">3.62</td> </tr>
-  <tr> <td class="g">精一群狙</td><td class="g">3-8</td><td colspan="2"><font color=gray>精一 群狙</font></td><td class="g">1.72</td><td class="g">2.46</td><td class="g">2.94</td><td class="g">3.22</td><td class="g">3.43</td><td class="g">3.55</td><td class="g">3.65</td> </tr>
-  <tr> <td class="g">精二群狙</td><td class="g">3-10</td><td colspan="2"><font color=gray>精二 群狙</font></td><td class="g">1.74</td><td class="g">2.48</td><td class="g">2.96</td><td class="g">3.25</td><td class="g">3.46</td><td class="g">3.58</td><td class="g">3.7</td> </tr>
-  <tr> <td class="g">精零敌飚</td><td class="g">5-2</td><td colspan="2"><font color=gray>暂无</font></td><td class="g">1.76</td><td class="g">2.5</td><td class="g">2.98</td><td class="g">3.28</td><td class="g">3.5</td><td class="g">3.63</td><td class="g">3.75</td> </tr>
-  <tr> <td>精零群奶</td><td>y-1</td><td colspan="2">狮蝎<br>伊桑</td><td class="g">1.65</td><td class="g">2.37</td><td class="g">2.83</td><td class="g">3.07</td><td class="g">3.24</td><td class="g">3.35</td><td bgcolor="#E0FFE0">3.45</td> </tr>
-  <tr> <td>精一群奶</td><td>y-2</td><td colspan="2">精零 初雪 (1)<br>格劳克斯 (1)</td><td bgcolor="#E0FFE0">1.68</td><td class="g">2.42</td><td class="g">2.92</td><td class="g">3.17</td><td class="g">3.34</td><td class="g">3.45</td><td class="g">3.55</td> </tr>
-  <tr> <td class="g">黑夜视觉</td><td class="g">y-3</td><td colspan="2" class="g">(二测) 精二 白面鸮</td><td class="g">1.7</td><td class="g">2.43</td><td class="g">2.91</td><td class="g">3.18</td><td class="g">3.38</td><td class="g">3.5</td><td class="g">3.6</td> </tr>
-  <tr> <td class="g">脑啡肽</td><td class="g">y-7</td><td colspan="2" class="g">白面鸮 (2)</td><td class="g">1.72</td><td class="g">2.44</td><td class="g">2.93</td><td class="g">3.21</td><td class="g">3.42</td><td class="g">3.54</td><td class="g">3.65</td> </tr>
-  <tr> <td class="g">黑夜脑啡肽</td><td class="g">y-5</td><td colspan="2" class="g">(二测) 精二 白面鸮 (2)</td><td class="g">1.73</td><td class="g">2.45</td><td class="g">2.94</td><td class="g">3.22</td><td class="g">3.44</td><td class="g">3.56</td><td class="g">3.67</td> </tr>
-  <tr> <td>精一初雪</td><td>y-6</td><td colspan="2">初雪</td><td bgcolor="#E0FFE0">1.74</td><td class="g">2.48</td><td class="g">2.99</td><td class="g">3.29</td><td class="g">3.53</td><td class="g">3.67</td><td class="g">3.8</td> </tr>
-  <tr> <td>反重力</td><td>y-4</td><td colspan="2">安洁莉娜 (3)</td><td class="g">1.77</td><td class="g">2.53</td><td bgcolor="#E0FFE0">3.05</td><td bgcolor="#E0FFE0">3.36</td><td class="g">3.62</td><td class="g">3.78</td><td class="g">3.92</td> </tr>
-  <tr> <td>4格霰弹</td><td>2-4</td><td colspan="2">精零 送葬人</td><td class="g">1.57</td><td class="g">2.24</td><td class="g">2.66</td><td class="g">2.87</td><td class="g">3.06</td><td class="g">3.14</td><td bgcolor="#E0FFE0">3.22</td> </tr>
-  <tr> <td>6格霰弹</td><td>2-5</td><td colspan="2">精一 送葬人</td><td class="g">1.62</td><td class="g">2.33</td><td class="g">2.77</td><td class="g">3.01</td><td class="g">3.22</td><td class="g">3.3</td><td bgcolor="#E0FFE0">3.37</td> </tr>
-  <tr> <td class="g">7格霰弹</td><td class="g">3-13</td><td colspan="2" class="g">(二测) 精零 艾雅法拉</td><td class="g">1.63</td><td class="g">2.34</td><td class="g">2.79</td><td class="g">3.04</td><td class="g">3.26</td><td class="g">3.35</td><td class="g">3.43</td> </tr>
-  <tr> <td>9格霰弹</td><td>3-14</td><td colspan="2">崖心 (2)</td><td class="g">1.67</td><td bgcolor="#E0FFE0">2.38</td><td class="g">2.83</td><td class="g">3.09</td><td class="g">3.31</td><td class="g">3.41</td><td class="g">3.5</td> </tr>
-  <tr> <td class="g">10格霰弹</td><td class="g">4-2</td><td colspan="2" class="g">(二测) 精一 艾雅法拉</td><td class="g">1.69</td><td class="g">2.4</td><td class="g">2.85</td><td class="g">3.12</td><td class="g">3.34</td><td class="g">3.44</td><td class="g">3.53</td> </tr>
-  <tr> <td>序时之匙</td><td>3-4</td><td colspan="2">莫斯提马 (3)</td><td class="g">1.75</td><td class="g">2.51</td><td class="g">3.03</td><td class="g">3.35</td><td class="g">3.6</td><td class="g">3.76</td><td bgcolor="#E0FFE0">3.9</td> </tr>
-  <tr> <td class="g">精一远狙</td><td class="g">3-9</td><td colspan="2" class="g">精一 守林人</td><td class="g">1.77</td><td class="g">2.53</td><td class="g">3.05</td><td class="g">3.36</td><td class="g">3.62</td><td class="g">3.78</td><td class="g">3.92</td> </tr>
-  <tr> <td class="g">13格</td><td class="g">3-5</td><td colspan="2" class="g">暂无</td><td class="g">1.67</td><td class="g">2.41</td><td class="g">2.88</td><td class="g">3.17</td><td class="g">3.4</td><td class="g">3.53</td><td class="g">3.65</td> </tr>
-  <tr> <td class="g">唱沙</td><td class="g">唱沙</td><td colspan="9" class="g">暂无</td> </tr>
+  <tr> 
+    <td>0格</td>
+    <td>0-1</td>
+    <td colspan="2">火神 (2)<br>格拉尼 (2)<br>坚雷 (2)<br>麦哲伦 (2) - 技能</td>
+    <td bgcolor="#E0FFE0">1.3</td>
+    <td bgcolor="#E0FFE0">1.87</td>
+    <td><font color=gray size=2>2.2</font></td>
+    <td><font color=gray size=2>2.31</font></td>
+    <td><font color=gray size=2>2.35</font></td>
+    <td><font color=gray size=2>2.38</font></td>
+    <td bgcolor="#E0FFE0">2.4</td> </tr>
+  <tr> 
+    <td>1格</td>
+    <td>1-1</td>
+    <td colspan="2">群卫<br>星极 (2)<br>星熊 (2)<br>煌 (3) - 切割</td>
+    <td bgcolor="#E0FFE0">1.4</td>
+    <td bgcolor="#E0FFE0">2</td>
+    <td><font color=gray size=2>2.4</font></td>
+    <td><font color=gray size=2>2.57</font></td>
+    <td><font color=gray size=2>2.63</font></td>
+    <td><font color=gray size=2>2.67</font></td>
+    <td bgcolor="#E0FFE0">2.7</td> </tr>
+  <tr> 
+    <td>2格</td>
+    <td>2-2</td>
+    <td colspan="2">煌 (2)<br>雷蛇 (2)<br>赫拉格 (3, 1~7级)</td>
+    <td bgcolor="#E0FFE0">1.5</td>
+    <td bgcolor="#E0FFE0">2.12</td>
+    <td bgcolor="#E0FFE0">2.52</td>
+    <td><font color=gray size=2>2.7</font></td>
+    <td><font color=gray size=2>2.85</font></td>
+    <td><font color=gray size=2>2.9</font></td>
+    <td><font color=gray size=2>2.95</font></td> </tr>
+  <tr> 
+    <td>3格</td>
+    <td>3-2</td>
+    <td colspan="2">暴行 (2)<br>布洛卡 (2)<br>赫拉格 (3, 8~10级)</td>
+    <td bgcolor="#E0FFE0">1.55</td>
+    <td bgcolor="#E0FFE0">2.21</td>
+    <td bgcolor="#E0FFE0">2.61</td>
+    <td bgcolor="#E0FFE0">2.82</td>
+    <td><font color=gray size=2>3.02</font></td>
+    <td><font color=gray size=2>3.08</font></td>
+    <td><font color=gray size=2>3.15</font></td> </tr>
+  <tr> 
+    <td>4格</td>
+    <td>4-1</td>
+    <td colspan="2">暗索 (2)</td>
+    <td bgcolor="#E0FFE0">1.6</td>
+    <td><font color=gray size=2>2.28</font></td>
+    <td><font color=gray size=2>2.71</font></td>
+    <td><font color=gray size=2>2.93</font></td>
+    <td><font color=gray size=2>3.14</font></td>
+    <td><font color=gray size=2>3.21</font></td>
+    <td><font color=gray size=2>3.3</font></td> </tr>
+  <tr> 
+    <td>5格</td>
+    <td>5-1</td>
+    <td colspan="2">伊芙利特</td>
+    <td><font color=gray size=2>1.65</font></td>
+    <td><font color=gray size=2>2.35</font></td>
+    <td><font color=gray size=2>2.8</font></td>
+    <td><font color=gray size=2>3.03</font></td>
+    <td><font color=gray size=2>3.2</font></td>
+    <td><font color=gray size=2>3.3</font></td>
+    <td bgcolor="#E0FFE0">3.4</td> </tr>
+  <tr> 
+    <td><font color=gray size=2>2格远卫</font></td>
+    <td><font color=gray size=2>2-3</font></td>
+    <td colspan="2"><font color=gray size=2>精零 远卫<br>精零 群法<br>精零 近狙</font></td>
+    <td><font color=gray size=2>1.6</font></td>
+    <td><font color=gray size=2>2.3</font></td>
+    <td><font color=gray size=2>2.75</font></td>
+    <td><font color=gray size=2>2.97</font></td>
+    <td><font color=gray size=2>3.19</font></td>
+    <td><font color=gray size=2>3.28</font></td>
+    <td><font color=gray size=2>3.35</font></td> </tr>
+  <tr> 
+    <td>3格远卫</td>
+    <td>3-12</td>
+    <td colspan="2">拉普兰德 (2)<br>陈 (2)</td>
+    <td bgcolor="#E0FFE0">1.65</td>
+    <td><font color=gray size=2>2.35</font></td>
+    <td bgcolor="#E0FFE0">2.83</td>
+    <td bgcolor="#E0FFE0">3.07</td>
+    <td bgcolor="#E0FFE0">3.25</td>
+    <td bgcolor="#E0FFE0">3.35</td>
+    <td><font color=gray size=2>3.45</font></td> </tr>
+  <tr> 
+    <td><font color=gray size=2>1格扇形</font></td>
+    <td><font color=gray size=2>1-2</font></td>
+    <td colspan="2"><font color=gray size=2>银灰 (2)</font></td>
+    <td><font color=gray size=2>1.5</font></td>
+    <td><font color=gray size=2>2.12</font></td>
+    <td><font color=gray size=2>2.54</font></td>
+    <td><font color=gray size=2>2.74</font></td>
+    <td><font color=gray size=2>2.87</font></td>
+    <td><font color=gray size=2>2.94</font></td>
+    <td><font color=gray size=2>3</font></td> </tr>
+  <tr> 
+    <td><font color=gray size=2>2格扇形</font></td>
+    <td><font color=gray size=2>2-1</font></td>
+    <td colspan="2"><font color=gray size=2>暂无</font></td>
+    <td><font color=gray size=2>1.65</font></td>
+    <td><font color=gray size=2>2.37</font></td>
+    <td><font color=gray size=2>2.83</font></td>
+    <td><font color=gray size=2>3.07</font></td>
+    <td><font color=gray size=2>3.24</font></td>
+    <td><font color=gray size=2>3.35</font></td>
+    <td><font color=gray size=2>3.45</font></td> </tr>
+  <tr> 
+    <td><font color=gray size=2>2+1格扇形</font></td>
+    <td><font color=gray size=2>3-11</font></td>
+    <td colspan="2"><font color=gray size=2>暂无</font></td>
+    <td><font color=gray size=2>1.67</font></td>
+    <td><font color=gray size=2>2.4</font></td>
+    <td><font color=gray size=2>2.86</font></td>
+    <td><font color=gray size=2>3.1</font></td>
+    <td><font color=gray size=2>3.27</font></td>
+    <td><font color=gray size=2>3.38</font></td>
+    <td><font color=gray size=2>3.48</font></td> </tr>
+  <tr> 
+    <td>3格扇形</td>
+    <td>3-7</td>
+    <td colspan="2">银灰 (3)</td>
+    <td><font color=gray size=2>1.75</font></td>
+    <td bgcolor="#E0FFE0">2.5</td>
+    <td bgcolor="#E0FFE0">2.95</td>
+    <td bgcolor="#E0FFE0">3.25</td>
+    <td bgcolor="#E0FFE0">3.52</td>
+    <td><font color=gray size=2>3.7</font></td>
+    <td><font color=gray size=2>3.85</font></td> </tr>
+  <tr> 
+    <td>1格菱形</td>
+    <td>x-5</td>
+    <td colspan="2">推进之王 (2)</td>
+    <td><font color=gray size=2>1.55</font></td>
+    <td><font color=gray size=2>2.15</font></td>
+    <td><font color=gray size=2>2.58</font></td>
+    <td><font color=gray size=2>2.78</font></td>
+    <td><font color=gray size=2>2.95</font></td>
+    <td><font color=gray size=2>3.03</font></td>
+    <td bgcolor="#E0FFE0">3.1</td> </tr>
+  <tr> 
+    <td>2格菱形</td>
+    <td>x-1</td>
+    <td colspan="2">德克萨斯 (2)</td>
+    <td><font color=gray size=2>1.7</font></td>
+    <td><font color=gray size=2>2.42</font></td>
+    <td><font color=gray size=2>2.9</font></td>
+    <td><font color=gray size=2>3.15</font></td>
+    <td><font color=gray size=2>3.35</font></td>
+    <td><font color=gray size=2>3.46</font></td>
+    <td bgcolor="#E0FFE0">3.55</td> </tr>
+  <tr> 
+    <td>药物配置</td>
+    <td>x-2</td>
+    <td colspan="2">真理 (2)</td>
+    <td bgcolor="#E0FFE0">1.78</td>
+    <td bgcolor="#E0FFE0">2.53</td>
+    <td><font color=gray size=2>3.04</font></td>
+    <td><font color=gray size=2>3.38</font></td>
+    <td><font color=gray size=2>3.65</font></td>
+    <td><font color=gray size=2>3.81</font></td>
+    <td><font color=gray size=2>3.95</font></td> </tr>
+  <tr> 
+    <td>3格菱形</td>
+    <td>x-3</td>
+    <td colspan="2">艾雅法拉 (3)<br>格劳克斯 (2)</td>
+    <td><font color=gray size=2>1.8</font></td>
+    <td bgcolor="#E0FFE0">2.55</td>
+    <td bgcolor="#E0FFE0">3.05</td>
+    <td bgcolor="#E0FFE0">3.4</td>
+    <td bgcolor="#E0FFE0">3.75</td>
+    <td><font color=gray size=2>3.98</font></td>
+    <td bgcolor="#E0FFE0">4.15</td> </tr>
+  <tr> 
+    <td><font color=gray size=2>1格方形</font></td>
+    <td><font color=gray size=2>x-4</font></td>
+    <td colspan="2"><font color=gray size=2>精零 空</font></td>
+    <td><font color=gray size=2>1.62</font></td>
+    <td><font color=gray size=2>2.32</font></td>
+    <td><font color=gray size=2>2.76</font></td>
+    <td><font color=gray size=2>3</font></td>
+    <td><font color=gray size=2>3.2</font></td>
+    <td><font color=gray size=2>3.28</font></td>
+    <td><font color=gray size=2>3.35</font></td> </tr>
+  <tr> 
+    <td>精一群法</td>
+    <td>3-6</td>
+    <td colspan="2">莫斯提马 (2)<br>煌 (3) - 爆裂</td>
+    <td><font color=gray size=2>1.65</font></td>
+    <td><font color=gray size=2>2.38</font></td>
+    <td><font color=gray size=2>2.87</font></td>
+    <td><font color=gray size=2>3.13</font></td>
+    <td><font color=gray size=2>3.3</font></td>
+    <td><font color=gray size=2>3.42</font></td>
+    <td bgcolor="#E0FFE0">3.52</td> </tr>
+  <tr> 
+    <td>精零快狙</td>
+    <td>3-1</td>
+    <td colspan="2">蓝毒 (1)</td>
+    <td bgcolor="#E0FFE0">1.68</td>
+    <td><font color=gray size=2>2.42</font></td>
+    <td><font color=gray size=2>2.92</font></td>
+    <td><font color=gray size=2>3.17</font></td>
+    <td><font color=gray size=2>3.34</font></td>
+    <td><font color=gray size=2>3.46</font></td>
+    <td><font color=gray size=2>3.56</font></td> </tr>
+  <tr> 
+    <td>精一快狙</td>
+    <td>3-3</td>
+    <td colspan="2">蓝毒 (1, 2)<br>红云 (2)<br>流星 (2)<br>远山 (2)</td>
+    <td bgcolor="#E0FFE0">1.7</td>
+    <td bgcolor="#E0FFE0">2.44</td>
+    <td><font color=gray size=2>2.92</font></td>
+    <td bgcolor="#E0FFE0">3.2</td>
+    <td><font color=gray size=2>3.4</font></td>
+    <td><font color=gray size=2>3.52</font></td>
+    <td bgcolor="#E0FFE0">3.62</td> </tr>
+  <tr> 
+    <td><font color=gray size=2>精一群狙</font></td>
+    <td><font color=gray size=2>3-8</font></td>
+    <td colspan="2"><font color=gray size=2>精一 群狙</font></font></td>
+    <td><font color=gray size=2>1.72</font></td>
+    <td><font color=gray size=2>2.46</font></td>
+    <td><font color=gray size=2>2.94</font></td>
+    <td><font color=gray size=2>3.22</font></td>
+    <td><font color=gray size=2>3.43</font></td>
+    <td><font color=gray size=2>3.55</font></td>
+    <td><font color=gray size=2>3.65</font></td> </tr>
+  <tr> 
+    <td><font color=gray size=2>精二群狙</font></td>
+    <td><font color=gray size=2>3-10</font></td>
+    <td colspan="2"><font color=gray size=2>精二 群狙</font></font></td>
+    <td><font color=gray size=2>1.74</font></td>
+    <td><font color=gray size=2>2.48</font></td>
+    <td><font color=gray size=2>2.96</font></td>
+    <td><font color=gray size=2>3.25</font></td>
+    <td><font color=gray size=2>3.46</font></td>
+    <td><font color=gray size=2>3.58</font></td>
+    <td><font color=gray size=2>3.7</font></td> </tr>
+  <tr> 
+    <td><font color=gray size=2>精零敌飚</font></td>
+    <td><font color=gray size=2>5-2</font></td>
+    <td colspan="2"><font color=gray size=2>暂无</font></font></td>
+    <td><font color=gray size=2>1.76</font></td>
+    <td><font color=gray size=2>2.5</font></td>
+    <td><font color=gray size=2>2.98</font></td>
+    <td><font color=gray size=2>3.28</font></td>
+    <td><font color=gray size=2>3.5</font></td>
+    <td><font color=gray size=2>3.63</font></td>
+    <td><font color=gray size=2>3.75</font></td> </tr>
+  <tr> 
+    <td>精零群奶</td>
+    <td>y-1</td>
+    <td colspan="2">狮蝎<br>伊桑</td>
+    <td><font color=gray size=2>1.65</font></td>
+    <td><font color=gray size=2>2.37</font></td>
+    <td><font color=gray size=2>2.83</font></td>
+    <td><font color=gray size=2>3.07</font></td>
+    <td><font color=gray size=2>3.24</font></td>
+    <td><font color=gray size=2>3.35</font></td>
+    <td bgcolor="#E0FFE0">3.45</td> </tr>
+  <tr> 
+    <td>精一群奶</td>
+    <td>y-2</td>
+    <td colspan="2">精零 初雪 (1)<br>格劳克斯 (1)</td>
+    <td bgcolor="#E0FFE0">1.68</td>
+    <td><font color=gray size=2>2.42</font></td>
+    <td><font color=gray size=2>2.92</font></td>
+    <td><font color=gray size=2>3.17</font></td>
+    <td><font color=gray size=2>3.34</font></td>
+    <td><font color=gray size=2>3.45</font></td>
+    <td><font color=gray size=2>3.55</font></td> </tr>
+  <tr> 
+    <td><font color=gray size=2>黑夜视觉</font></td>
+    <td><font color=gray size=2>y-3</font></td>
+    <td colspan="2"><font color=gray size=2>(二测) 精二 白面鸮</font></td>
+    <td><font color=gray size=2>1.7</font></td>
+    <td><font color=gray size=2>2.43</font></td>
+    <td><font color=gray size=2>2.91</font></td>
+    <td><font color=gray size=2>3.18</font></td>
+    <td><font color=gray size=2>3.38</font></td>
+    <td><font color=gray size=2>3.5</font></td>
+    <td><font color=gray size=2>3.6</font></td> </tr>
+  <tr> 
+    <td><font color=gray size=2>脑啡肽</font></td>
+    <td><font color=gray size=2>y-7</font></td>
+    <td colspan="2"><font color=gray size=2>白面鸮 (2)</font></td>
+    <td><font color=gray size=2>1.72</font></td>
+    <td><font color=gray size=2>2.44</font></td>
+    <td><font color=gray size=2>2.93</font></td>
+    <td><font color=gray size=2>3.21</font></td>
+    <td><font color=gray size=2>3.42</font></td>
+    <td><font color=gray size=2>3.54</font></td>
+    <td><font color=gray size=2>3.65</font></td> </tr>
+  <tr> 
+    <td><font color=gray size=2>黑夜脑啡肽</font></td>
+    <td><font color=gray size=2>y-5</font></td>
+    <td colspan="2"><font color=gray size=2>(二测) 精二 白面鸮 (2)</font></td>
+    <td><font color=gray size=2>1.73</font></td>
+    <td><font color=gray size=2>2.45</font></td>
+    <td><font color=gray size=2>2.94</font></td>
+    <td><font color=gray size=2>3.22</font></td>
+    <td><font color=gray size=2>3.44</font></td>
+    <td><font color=gray size=2>3.56</font></td>
+    <td><font color=gray size=2>3.67</font></td> </tr>
+  <tr> 
+    <td>精一初雪</td>
+    <td>y-6</td>
+    <td colspan="2">初雪</td>
+    <td bgcolor="#E0FFE0">1.74</td>
+    <td><font color=gray size=2>2.48</font></td>
+    <td><font color=gray size=2>2.99</font></td>
+    <td><font color=gray size=2>3.29</font></td>
+    <td><font color=gray size=2>3.53</font></td>
+    <td><font color=gray size=2>3.67</font></td>
+    <td><font color=gray size=2>3.8</font></td> </tr>
+  <tr> 
+    <td>反重力</td>
+    <td>y-4</td>
+    <td colspan="2">安洁莉娜 (3)</td>
+    <td><font color=gray size=2>1.77</font></td>
+    <td><font color=gray size=2>2.53</font></td>
+    <td bgcolor="#E0FFE0">3.05</td>
+    <td bgcolor="#E0FFE0">3.36</td>
+    <td><font color=gray size=2>3.62</font></td>
+    <td><font color=gray size=2>3.78</font></td>
+    <td><font color=gray size=2>3.92</font></td> </tr>
+  <tr> 
+    <td>4格霰弹</td>
+    <td>2-4</td>
+    <td colspan="2">精零 送葬人</td>
+    <td><font color=gray size=2>1.57</font></td>
+    <td><font color=gray size=2>2.24</font></td>
+    <td><font color=gray size=2>2.66</font></td>
+    <td><font color=gray size=2>2.87</font></td>
+    <td><font color=gray size=2>3.06</font></td>
+    <td><font color=gray size=2>3.14</font></td>
+    <td bgcolor="#E0FFE0">3.22</td> </tr>
+  <tr> 
+    <td>6格霰弹</td>
+    <td>2-5</td>
+    <td colspan="2">精一 送葬人</td>
+    <td><font color=gray size=2>1.62</font></td>
+    <td><font color=gray size=2>2.33</font></td>
+    <td><font color=gray size=2>2.77</font></td>
+    <td><font color=gray size=2>3.01</font></td>
+    <td><font color=gray size=2>3.22</font></td>
+    <td><font color=gray size=2>3.3</font></td>
+    <td bgcolor="#E0FFE0">3.37</td> </tr>
+  <tr> 
+    <td><font color=gray size=2>7格霰弹</font></td>
+    <td><font color=gray size=2>3-13</font></td>
+    <td colspan="2"><font color=gray size=2>(二测) 精零 艾雅法拉</font></td>
+    <td><font color=gray size=2>1.63</font></td>
+    <td><font color=gray size=2>2.34</font></td>
+    <td><font color=gray size=2>2.79</font></td>
+    <td><font color=gray size=2>3.04</font></td>
+    <td><font color=gray size=2>3.26</font></td>
+    <td><font color=gray size=2>3.35</font></td>
+    <td><font color=gray size=2>3.43</font></td> </tr>
+  <tr> 
+    <td>9格霰弹</td>
+    <td>3-14</td>
+    <td colspan="2">崖心 (2)</td>
+    <td><font color=gray size=2>1.67</font></td>
+    <td bgcolor="#E0FFE0">2.38</td>
+    <td><font color=gray size=2>2.83</font></td>
+    <td><font color=gray size=2>3.09</font></td>
+    <td><font color=gray size=2>3.31</font></td>
+    <td><font color=gray size=2>3.41</font></td>
+    <td><font color=gray size=2>3.5</font></td> </tr>
+  <tr> 
+    <td><font color=gray size=2>10格霰弹</font></td>
+    <td><font color=gray size=2>4-2</font></td>
+    <td colspan="2"><font color=gray size=2>(二测) 精一 艾雅法拉</font></td>
+    <td><font color=gray size=2>1.69</font></td>
+    <td><font color=gray size=2>2.4</font></td>
+    <td><font color=gray size=2>2.85</font></td>
+    <td><font color=gray size=2>3.12</font></td>
+    <td><font color=gray size=2>3.34</font></td>
+    <td><font color=gray size=2>3.44</font></td>
+    <td><font color=gray size=2>3.53</font></td> </tr>
+  <tr> 
+    <td>序时之匙</td>
+    <td>3-4</td>
+    <td colspan="2">莫斯提马 (3)</td>
+    <td><font color=gray size=2>1.75</font></td>
+    <td><font color=gray size=2>2.51</font></td>
+    <td><font color=gray size=2>3.03</font></td>
+    <td><font color=gray size=2>3.35</font></td>
+    <td><font color=gray size=2>3.6</font></td>
+    <td><font color=gray size=2>3.76</font></td>
+    <td bgcolor="#E0FFE0">3.9</td> </tr>
+  <tr> 
+    <td><font color=gray size=2>精一远狙</font></td>
+    <td><font color=gray size=2>3-9</font></td>
+    <td colspan="2"><font color=gray size=2>精一 守林人</font></td>
+    <td><font color=gray size=2>1.77</font></td>
+    <td><font color=gray size=2>2.53</font></td>
+    <td><font color=gray size=2>3.05</font></td>
+    <td><font color=gray size=2>3.36</font></td>
+    <td><font color=gray size=2>3.62</font></td>
+    <td><font color=gray size=2>3.78</font></td>
+    <td><font color=gray size=2>3.92</font></td> </tr>
+  <tr> 
+    <td><font color=gray size=2>13格</font></td>
+    <td><font color=gray size=2>3-5</font></td>
+    <td colspan="2"><font color=gray size=2>暂无</font></td>
+    <td><font color=gray size=2>1.67</font></td>
+    <td><font color=gray size=2>2.41</font></td>
+    <td><font color=gray size=2>2.88</font></td>
+    <td><font color=gray size=2>3.17</font></td>
+    <td><font color=gray size=2>3.4</font></td>
+    <td><font color=gray size=2>3.53</font></td>
+    <td><font color=gray size=2>3.65</font></td> </tr>
+  <tr> 
+    <td><font color=gray size=2>唱沙</font></td>
+    <td><font color=gray size=2>唱沙</font></td>
+    <td colspan="9"><font color=gray size=2>暂无</font></td> </tr>
 </table>
 
 <span id="攻击范围对照-中文"></span>
 #### 攻击范围对照表
 
-懒得自己写了，借Mooncell的一用<img src="README/扇子脸.png" width="60">  
+懒得自己写了，GitHub的README又不支持CSS，干脆借Mooncell的一用<img src="README/扇子脸.png" width="60">  
 来源：[Mooncell-攻击范围一览](http://ak.mooncell.wiki/w/%E6%94%BB%E5%87%BB%E8%8C%83%E5%9B%B4%E4%B8%80%E8%A7%88)  
-
-<table>
-  <tr> <th width="25%">文本描述</th><th width="15%">范围代号</th><th width="60%">范围</th> </tr>
-  <tr> <td>0格</td><td>0-1</td><td><svg viewBox="0 0 26 26" style="vertical-align:top;width:26px;height:26px;width:26px!important;height:26px!important"><defs><rect id="1" fill="#27a6f3" width="22" height="22"></rect><rect id="2" fill="none" stroke="gray" stroke-width="2" width="20" height="20"></rect></defs><use xlink:href="#1" x="1" y="1"></use></svg></td> </tr>
-  <tr> <td>1格</td><td>1-1</td><td><svg viewBox="0 0 52 26" style="vertical-align:top;width:52px;height:26px;width:52px!important;height:26px!important"><defs><rect id="1" fill="#27a6f3" width="22" height="22"></rect><rect id="2" fill="none" stroke="gray" stroke-width="2" width="20" height="20"></rect></defs><use xlink:href="#1" x="1" y="1"></use><use xlink:href="#2" x="28" y="2"></use></svg></td> </tr>
-  <tr> <td>2格</td><td>2-2</td><td><svg viewBox="0 0 78 26" style="vertical-align:top;width:78px;height:26px;width:78px!important;height:26px!important"><defs><rect id="1" fill="#27a6f3" width="22" height="22"></rect><rect id="2" fill="none" stroke="gray" stroke-width="2" width="20" height="20"></rect></defs><use xlink:href="#1" x="1" y="1"></use><use xlink:href="#2" x="28" y="2"></use><use xlink:href="#2" x="54" y="2"></use></svg></td> </tr>
-  <tr> <td>3格</td><td>3-2</td><td><svg viewBox="0 0 104 26" style="vertical-align:top;width:104px;height:26px;width:104px!important;height:26px!important"><defs><rect id="1" fill="#27a6f3" width="22" height="22"></rect><rect id="2" fill="none" stroke="gray" stroke-width="2" width="20" height="20"></rect></defs><use xlink:href="#1" x="1" y="1"></use><use xlink:href="#2" x="28" y="2"></use><use xlink:href="#2" x="54" y="2"></use><use xlink:href="#2" x="80" y="2"></use></svg></td> </tr>
-  <tr> <td>4格</td><td>4-1</td><td><svg viewBox="0 0 130 26" style="vertical-align:top;width:130px;height:26px;width:130px!important;height:26px!important"><defs><rect id="1" fill="#27a6f3" width="22" height="22"></rect><rect id="2" fill="none" stroke="gray" stroke-width="2" width="20" height="20"></rect></defs><use xlink:href="#1" x="1" y="1"></use><use xlink:href="#2" x="28" y="2"></use><use xlink:href="#2" x="54" y="2"></use><use xlink:href="#2" x="80" y="2"></use><use xlink:href="#2" x="106" y="2"></use></svg></td> </tr>
-  <tr> <td>5格</td><td>5-1</td><td><svg viewBox="0 0 156 26" style="vertical-align:top;width:156px;height:26px;width:156px!important;height:26px!important"><defs><rect id="1" fill="#27a6f3" width="22" height="22"></rect><rect id="2" fill="none" stroke="gray" stroke-width="2" width="20" height="20"></rect></defs><use xlink:href="#1" x="1" y="1"></use><use xlink:href="#2" x="28" y="2"></use><use xlink:href="#2" x="54" y="2"></use><use xlink:href="#2" x="80" y="2"></use><use xlink:href="#2" x="106" y="2"></use><use xlink:href="#2" x="132" y="2"></use></svg></td> </tr>
-  <tr> <td>2格远卫</td><td>2-3</td><td><svg viewBox="0 0 78 78" style="vertical-align:top;width:78px;height:78px;width:78px!important;height:78px!important"><defs><rect id="1" fill="#27a6f3" width="22" height="22"></rect><rect id="2" fill="none" stroke="gray" stroke-width="2" width="20" height="20"></rect></defs><use xlink:href="#2" x="2" y="2"></use><use xlink:href="#2" x="28" y="2"></use><use xlink:href="#1" x="1" y="27"></use><use xlink:href="#2" x="28" y="28"></use><use xlink:href="#2" x="54" y="28"></use><use xlink:href="#2" x="2" y="54"></use><use xlink:href="#2" x="28" y="54"></use></svg></td> </tr>
-  <tr> <td>3格远卫</td><td>3-12</td><td><svg viewBox="0 0 104 78" style="vertical-align:top;width:104px;height:78px;width:104px!important;height:78px!important"><defs><rect id="1" fill="#27a6f3" width="22" height="22"></rect><rect id="2" fill="none" stroke="gray" stroke-width="2" width="20" height="20"></rect></defs><use xlink:href="#2" x="2" y="2"></use><use xlink:href="#2" x="28" y="2"></use><use xlink:href="#1" x="1" y="27"></use><use xlink:href="#2" x="28" y="28"></use><use xlink:href="#2" x="54" y="28"></use><use xlink:href="#2" x="80" y="28"></use><use xlink:href="#2" x="2" y="54"></use><use xlink:href="#2" x="28" y="54"></use></svg></td> </tr>
-  <tr> <td>1格扇形</td><td>1-2</td><td><svg viewBox="0 0 52 78" style="vertical-align:top;width:52px;height:78px;width:52px!important;height:78px!important"><defs><rect id="1" fill="#27a6f3" width="22" height="22"></rect><rect id="2" fill="none" stroke="gray" stroke-width="2" width="20" height="20"></rect></defs><use xlink:href="#2" x="2" y="2"></use><use xlink:href="#1" x="1" y="27"></use><use xlink:href="#2" x="28" y="28"></use><use xlink:href="#2" x="2" y="54"></use></svg></td> </tr>
-  <tr> <td>2格扇形</td><td>2-1</td><td><svg viewBox="0 0 78 130" style="vertical-align:top;width:78px;height:130px;width:78px!important;height:130px!important"><defs><rect id="1" fill="#27a6f3" width="22" height="22"></rect><rect id="2" fill="none" stroke="gray" stroke-width="2" width="20" height="20"></rect></defs><use xlink:href="#2" x="2" y="2"></use><use xlink:href="#2" x="2" y="28"></use><use xlink:href="#2" x="28" y="28"></use><use xlink:href="#1" x="1" y="53"></use><use xlink:href="#2" x="28" y="54"></use><use xlink:href="#2" x="54" y="54"></use><use xlink:href="#2" x="2" y="80"></use><use xlink:href="#2" x="28" y="80"></use><use xlink:href="#2" x="2" y="106"></use></svg></td> </tr>
-  <tr> <td>2+1格扇形</td><td>3-11</td><td><svg viewBox="0 0 104 130" style="vertical-align:top;width:104px;height:130px;width:104px!important;height:130px!important"><defs><rect id="1" fill="#27a6f3" width="22" height="22"></rect><rect id="2" fill="none" stroke="gray" stroke-width="2" width="20" height="20"></rect></defs><use xlink:href="#2" x="2" y="2"></use><use xlink:href="#2" x="2" y="28"></use><use xlink:href="#2" x="28" y="28"></use><use xlink:href="#1" x="1" y="53"></use><use xlink:href="#2" x="28" y="54"></use><use xlink:href="#2" x="54" y="54"></use><use xlink:href="#2" x="80" y="54"></use><use xlink:href="#2" x="2" y="80"></use><use xlink:href="#2" x="28" y="80"></use><use xlink:href="#2" x="2" y="106"></use></svg></td> </tr>
-  <tr> <td>3格扇形</td><td>3-7</td><td><svg viewBox="0 0 104 182" style="vertical-align:top;width:104px;height:182px;width:104px!important;height:182px!important"><defs><rect id="1" fill="#27a6f3" width="22" height="22"></rect><rect id="2" fill="none" stroke="gray" stroke-width="2" width="20" height="20"></rect></defs><use xlink:href="#2" x="2" y="2"></use><use xlink:href="#2" x="2" y="28"></use><use xlink:href="#2" x="28" y="28"></use><use xlink:href="#2" x="2" y="54"></use><use xlink:href="#2" x="28" y="54"></use><use xlink:href="#2" x="54" y="54"></use><use xlink:href="#1" x="1" y="79"></use><use xlink:href="#2" x="28" y="80"></use><use xlink:href="#2" x="54" y="80"></use><use xlink:href="#2" x="80" y="80"></use><use xlink:href="#2" x="2" y="106"></use><use xlink:href="#2" x="28" y="106"></use><use xlink:href="#2" x="54" y="106"></use><use xlink:href="#2" x="2" y="132"></use><use xlink:href="#2" x="28" y="132"></use><use xlink:href="#2" x="2" y="158"></use></svg></td> </tr>
-  <tr> <td>1格菱形</td><td>x-5</td><td><svg viewBox="0 0 78 78" style="vertical-align:top;width:78px;height:78px;width:78px!important;height:78px!important"><defs><rect id="1" fill="#27a6f3" width="22" height="22"></rect><rect id="2" fill="none" stroke="gray" stroke-width="2" width="20" height="20"></rect></defs><use xlink:href="#2" x="28" y="2"></use><use xlink:href="#2" x="2" y="28"></use><use xlink:href="#1" x="27" y="27"></use><use xlink:href="#2" x="54" y="28"></use><use xlink:href="#2" x="28" y="54"></use></svg></td> </tr>
-  <tr> <td>2格菱形</td><td>x-1</td><td><svg viewBox="0 0 130 130" style="vertical-align:top;width:130px;height:130px;width:130px!important;height:130px!important"><defs><rect id="1" fill="#27a6f3" width="22" height="22"></rect><rect id="2" fill="none" stroke="gray" stroke-width="2" width="20" height="20"></rect></defs><use xlink:href="#2" x="54" y="2"></use><use xlink:href="#2" x="28" y="28"></use><use xlink:href="#2" x="54" y="28"></use><use xlink:href="#2" x="80" y="28"></use><use xlink:href="#2" x="2" y="54"></use><use xlink:href="#2" x="28" y="54"></use><use xlink:href="#1" x="53" y="53"></use><use xlink:href="#2" x="80" y="54"></use><use xlink:href="#2" x="106" y="54"></use><use xlink:href="#2" x="28" y="80"></use><use xlink:href="#2" x="54" y="80"></use><use xlink:href="#2" x="80" y="80"></use><use xlink:href="#2" x="54" y="106"></use></svg></td> </tr>
-  <tr> <td>药物配置</td><td>Range/x-2</td><td><svg viewBox="0 0 130 130" style="vertical-align:top;width:130px;height:130px;width:130px!important;height:130px!important"><defs><rect id="1" fill="#27a6f3" width="22" height="22"></rect><rect id="2" fill="none" stroke="gray" stroke-width="2" width="20" height="20"></rect></defs><use xlink:href="#2" x="28" y="2"></use><use xlink:href="#2" x="54" y="2"></use><use xlink:href="#2" x="80" y="2"></use><use xlink:href="#2" x="2" y="28"></use><use xlink:href="#2" x="28" y="28"></use><use xlink:href="#2" x="54" y="28"></use><use xlink:href="#2" x="80" y="28"></use><use xlink:href="#2" x="106" y="28"></use><use xlink:href="#2" x="2" y="54"></use><use xlink:href="#2" x="28" y="54"></use><use xlink:href="#1" x="53" y="53"></use><use xlink:href="#2" x="80" y="54"></use><use xlink:href="#2" x="106" y="54"></use><use xlink:href="#2" x="2" y="80"></use><use xlink:href="#2" x="28" y="80"></use><use xlink:href="#2" x="54" y="80"></use><use xlink:href="#2" x="80" y="80"></use><use xlink:href="#2" x="106" y="80"></use><use xlink:href="#2" x="28" y="106"></use><use xlink:href="#2" x="54" y="106"></use><use xlink:href="#2" x="80" y="106"></use></svg></td></tr>
-  <tr> <td>3格菱形</td><td>x-3</td><td><svg viewBox="0 0 182 182" style="vertical-align:top;width:182px;height:182px;width:182px!important;height:182px!important"><defs><rect id="1" fill="#27a6f3" width="22" height="22"></rect><rect id="2" fill="none" stroke="gray" stroke-width="2" width="20" height="20"></rect></defs><use xlink:href="#2" x="80" y="2"></use><use xlink:href="#2" x="54" y="28"></use><use xlink:href="#2" x="80" y="28"></use><use xlink:href="#2" x="106" y="28"></use><use xlink:href="#2" x="28" y="54"></use><use xlink:href="#2" x="54" y="54"></use><use xlink:href="#2" x="80" y="54"></use><use xlink:href="#2" x="106" y="54"></use><use xlink:href="#2" x="132" y="54"></use><use xlink:href="#2" x="2" y="80"></use><use xlink:href="#2" x="28" y="80"></use><use xlink:href="#2" x="54" y="80"></use><use xlink:href="#1" x="79" y="79"></use><use xlink:href="#2" x="106" y="80"></use><use xlink:href="#2" x="132" y="80"></use><use xlink:href="#2" x="158" y="80"></use><use xlink:href="#2" x="28" y="106"></use><use xlink:href="#2" x="54" y="106"></use><use xlink:href="#2" x="80" y="106"></use><use xlink:href="#2" x="106" y="106"></use><use xlink:href="#2" x="132" y="106"></use><use xlink:href="#2" x="54" y="132"></use><use xlink:href="#2" x="80" y="132"></use><use xlink:href="#2" x="106" y="132"></use><use xlink:href="#2" x="80" y="158"></use></svg></td> </tr>
-  <tr> <td>1格方形</td><td>x-4</td><td><svg viewBox="0 0 78 78" style="vertical-align:top;width:78px;height:78px;width:78px!important;height:78px!important"><defs><rect id="1" fill="#27a6f3" width="22" height="22"></rect><rect id="2" fill="none" stroke="gray" stroke-width="2" width="20" height="20"></rect></defs><use xlink:href="#2" x="2" y="2"></use><use xlink:href="#2" x="28" y="2"></use><use xlink:href="#2" x="54" y="2"></use><use xlink:href="#2" x="2" y="28"></use><use xlink:href="#1" x="27" y="27"></use><use xlink:href="#2" x="54" y="28"></use><use xlink:href="#2" x="2" y="54"></use><use xlink:href="#2" x="28" y="54"></use><use xlink:href="#2" x="54" y="54"></use></svg></td> </tr>
-  <tr> <td>精一群法</td><td>3-6</td><td><svg viewBox="0 0 78 78" style="vertical-align:top;width:78px;height:78px;width:78px!important;height:78px!important"><defs><rect id="1" fill="#27a6f3" width="22" height="22"></rect><rect id="2" fill="none" stroke="gray" stroke-width="2" width="20" height="20"></rect></defs><use xlink:href="#2" x="2" y="2"></use><use xlink:href="#2" x="28" y="2"></use><use xlink:href="#2" x="54" y="2"></use><use xlink:href="#1" x="1" y="27"></use><use xlink:href="#2" x="28" y="28"></use><use xlink:href="#2" x="54" y="28"></use><use xlink:href="#2" x="2" y="54"></use><use xlink:href="#2" x="28" y="54"></use><use xlink:href="#2" x="54" y="54"></use></svg></td> </tr>
-  <tr> <td>精零快狙</td><td>3-1</td><td><svg viewBox="0 0 104 78" style="vertical-align:top;width:104px;height:78px;width:104px!important;height:78px!important"><defs><rect id="1" fill="#27a6f3" width="22" height="22"></rect><rect id="2" fill="none" stroke="gray" stroke-width="2" width="20" height="20"></rect></defs><use xlink:href="#2" x="2" y="2"></use><use xlink:href="#2" x="28" y="2"></use><use xlink:href="#2" x="54" y="2"></use><use xlink:href="#1" x="1" y="27"></use><use xlink:href="#2" x="28" y="28"></use><use xlink:href="#2" x="54" y="28"></use><use xlink:href="#2" x="80" y="28"></use><use xlink:href="#2" x="2" y="54"></use><use xlink:href="#2" x="28" y="54"></use><use xlink:href="#2" x="54" y="54"></use></svg></td> </tr>
-  <tr> <td>精一快狙</td><td>3-3</td><td><svg viewBox="0 0 104 78" style="vertical-align:top;width:104px;height:78px;width:104px!important;height:78px!important"><defs><rect id="1" fill="#27a6f3" width="22" height="22"></rect><rect id="2" fill="none" stroke="gray" stroke-width="2" width="20" height="20"></rect></defs><use xlink:href="#2" x="2" y="2"></use><use xlink:href="#2" x="28" y="2"></use><use xlink:href="#2" x="54" y="2"></use><use xlink:href="#2" x="80" y="2"></use><use xlink:href="#1" x="1" y="27"></use><use xlink:href="#2" x="28" y="28"></use><use xlink:href="#2" x="54" y="28"></use><use xlink:href="#2" x="80" y="28"></use><use xlink:href="#2" x="2" y="54"></use><use xlink:href="#2" x="28" y="54"></use><use xlink:href="#2" x="54" y="54"></use><use xlink:href="#2" x="80" y="54"></use></svg></td> </tr>
-  <tr> <td>精一群狙</td><td>3-8</td><td><svg viewBox="0 0 130 78" style="vertical-align:top;width:130px;height:78px;width:130px!important;height:78px!important"><defs><rect id="1" fill="#27a6f3" width="22" height="22"></rect><rect id="2" fill="none" stroke="gray" stroke-width="2" width="20" height="20"></rect></defs><use xlink:href="#2" x="2" y="2"></use><use xlink:href="#2" x="28" y="2"></use><use xlink:href="#2" x="54" y="2"></use><use xlink:href="#2" x="80" y="2"></use><use xlink:href="#1" x="1" y="27"></use><use xlink:href="#2" x="28" y="28"></use><use xlink:href="#2" x="54" y="28"></use><use xlink:href="#2" x="80" y="28"></use><use xlink:href="#2" x="106" y="28"></use><use xlink:href="#2" x="2" y="54"></use><use xlink:href="#2" x="28" y="54"></use><use xlink:href="#2" x="54" y="54"></use><use xlink:href="#2" x="80" y="54"></use></svg></td> </tr>
-  <tr> <td>精二群狙</td><td>3-10</td><td><svg viewBox="0 0 130 78" style="vertical-align:top;width:130px;height:78px;width:130px!important;height:78px!important"><defs><rect id="1" fill="#27a6f3" width="22" height="22"></rect><rect id="2" fill="none" stroke="gray" stroke-width="2" width="20" height="20"></rect></defs><use xlink:href="#2" x="2" y="2"></use><use xlink:href="#2" x="28" y="2"></use><use xlink:href="#2" x="54" y="2"></use><use xlink:href="#2" x="80" y="2"></use><use xlink:href="#2" x="106" y="2"></use><use xlink:href="#1" x="1" y="27"></use><use xlink:href="#2" x="28" y="28"></use><use xlink:href="#2" x="54" y="28"></use><use xlink:href="#2" x="80" y="28"></use><use xlink:href="#2" x="106" y="28"></use><use xlink:href="#2" x="2" y="54"></use><use xlink:href="#2" x="28" y="54"></use><use xlink:href="#2" x="54" y="54"></use><use xlink:href="#2" x="80" y="54"></use><use xlink:href="#2" x="106" y="54"></use></svg></td> </tr>
-  <tr> <td>精零敌飚</td><td>5-2</td><td><svg viewBox="0 0 156 78" style="vertical-align:top;width:156px;height:78px;width:156px!important;height:78px!important"><defs><rect id="1" fill="#27a6f3" width="22" height="22"></rect><rect id="2" fill="none" stroke="gray" stroke-width="2" width="20" height="20"></rect></defs><use xlink:href="#2" x="2" y="2"></use><use xlink:href="#2" x="28" y="2"></use><use xlink:href="#2" x="54" y="2"></use><use xlink:href="#2" x="80" y="2"></use><use xlink:href="#2" x="106" y="2"></use><use xlink:href="#2" x="132" y="2"></use><use xlink:href="#1" x="1" y="27"></use><use xlink:href="#2" x="28" y="28"></use><use xlink:href="#2" x="54" y="28"></use><use xlink:href="#2" x="80" y="28"></use><use xlink:href="#2" x="106" y="28"></use><use xlink:href="#2" x="132" y="28"></use><use xlink:href="#2" x="2" y="54"></use><use xlink:href="#2" x="28" y="54"></use><use xlink:href="#2" x="54" y="54"></use><use xlink:href="#2" x="80" y="54"></use><use xlink:href="#2" x="106" y="54"></use><use xlink:href="#2" x="132" y="54"></use></svg></td> </tr>
-  <tr> <td>精零群奶</td><td>y-1</td><td><svg viewBox="0 0 104 78" style="vertical-align:top;width:104px;height:78px;width:104px!important;height:78px!important"><defs><rect id="1" fill="#27a6f3" width="22" height="22"></rect><rect id="2" fill="none" stroke="gray" stroke-width="2" width="20" height="20"></rect></defs><use xlink:href="#2" x="2" y="2"></use><use xlink:href="#2" x="28" y="2"></use><use xlink:href="#2" x="54" y="2"></use><use xlink:href="#2" x="2" y="28"></use><use xlink:href="#1" x="27" y="27"></use><use xlink:href="#2" x="54" y="28"></use><use xlink:href="#2" x="80" y="28"></use><use xlink:href="#2" x="2" y="54"></use><use xlink:href="#2" x="28" y="54"></use><use xlink:href="#2" x="54" y="54"></use></svg></td> </tr>
-  <tr> <td>精一群奶</td><td>y-2</td><td><svg viewBox="0 0 104 78" style="vertical-align:top;width:104px;height:78px;width:104px!important;height:78px!important"><defs><rect id="1" fill="#27a6f3" width="22" height="22"></rect><rect id="2" fill="none" stroke="gray" stroke-width="2" width="20" height="20"></rect></defs><use xlink:href="#2" x="2" y="2"></use><use xlink:href="#2" x="28" y="2"></use><use xlink:href="#2" x="54" y="2"></use><use xlink:href="#2" x="80" y="2"></use><use xlink:href="#2" x="2" y="28"></use><use xlink:href="#1" x="27" y="27"></use><use xlink:href="#2" x="54" y="28"></use><use xlink:href="#2" x="80" y="28"></use><use xlink:href="#2" x="2" y="54"></use><use xlink:href="#2" x="28" y="54"></use><use xlink:href="#2" x="54" y="54"></use><use xlink:href="#2" x="80" y="54"></use></svg></td> </tr>
-  <tr> <td class="g">黑夜视觉</td><td>y-3</td><td><svg viewBox="0 0 130 78" style="vertical-align:top;width:130px;height:78px;width:130px!important;height:78px!important"><defs><rect id="1" fill="#27a6f3" width="22" height="22"></rect><rect id="2" fill="none" stroke="gray" stroke-width="2" width="20" height="20"></rect></defs><use xlink:href="#2" x="2" y="2"></use><use xlink:href="#2" x="28" y="2"></use><use xlink:href="#2" x="54" y="2"></use><use xlink:href="#2" x="80" y="2"></use><use xlink:href="#2" x="2" y="28"></use><use xlink:href="#1" x="27" y="27"></use><use xlink:href="#2" x="54" y="28"></use><use xlink:href="#2" x="80" y="28"></use><use xlink:href="#2" x="106" y="28"></use><use xlink:href="#2" x="2" y="54"></use><use xlink:href="#2" x="28" y="54"></use><use xlink:href="#2" x="54" y="54"></use><use xlink:href="#2" x="80" y="54"></use></svg></td> </tr>
-  <tr> <td>脑啡肽</td><td>y-7</td><td><svg viewBox="0 0 130 78" style="vertical-align:top;width:130px;height:78px;width:130px!important;height:78px!important"><defs><rect id="1" fill="#27a6f3" width="22" height="22"></rect><rect id="2" fill="none" stroke="gray" stroke-width="2" width="20" height="20"></rect></defs><use xlink:href="#2" x="2" y="2"></use><use xlink:href="#2" x="28" y="2"></use><use xlink:href="#2" x="54" y="2"></use><use xlink:href="#2" x="80" y="2"></use><use xlink:href="#2" x="106" y="2"></use><use xlink:href="#2" x="2" y="28"></use><use xlink:href="#1" x="27" y="27"></use><use xlink:href="#2" x="54" y="28"></use><use xlink:href="#2" x="80" y="28"></use><use xlink:href="#2" x="106" y="28"></use><use xlink:href="#2" x="2" y="54"></use><use xlink:href="#2" x="28" y="54"></use><use xlink:href="#2" x="54" y="54"></use><use xlink:href="#2" x="80" y="54"></use><use xlink:href="#2" x="106" y="54"></use></svg></td> </tr>
-  <tr> <td class="g">黑夜脑啡肽</td><td>y-5</td><td><svg viewBox="0 0 156 78" style="vertical-align:top;width:156px;height:78px;width:156px!important;height:78px!important"><defs><rect id="1" fill="#27a6f3" width="22" height="22"></rect><rect id="2" fill="none" stroke="gray" stroke-width="2" width="20" height="20"></rect></defs><use xlink:href="#2" x="2" y="2"></use><use xlink:href="#2" x="28" y="2"></use><use xlink:href="#2" x="54" y="2"></use><use xlink:href="#2" x="80" y="2"></use><use xlink:href="#2" x="106" y="2"></use><use xlink:href="#2" x="2" y="28"></use><use xlink:href="#1" x="27" y="27"></use><use xlink:href="#2" x="54" y="28"></use><use xlink:href="#2" x="80" y="28"></use><use xlink:href="#2" x="106" y="28"></use><use xlink:href="#2" x="132" y="28"></use><use xlink:href="#2" x="2" y="54"></use><use xlink:href="#2" x="28" y="54"></use><use xlink:href="#2" x="54" y="54"></use><use xlink:href="#2" x="80" y="54"></use><use xlink:href="#2" x="106" y="54"></use></svg></td> </tr>
-  <tr> <td>精一初雪</td><td>y-6</td><td><svg viewBox="0 0 104 130" style="vertical-align:top;width:104px;height:130px;width:104px!important;height:130px!important"><defs><rect id="1" fill="#27a6f3" width="22" height="22"></rect><rect id="2" fill="none" stroke="gray" stroke-width="2" width="20" height="20"></rect></defs><use xlink:href="#2" x="28" y="2"></use><use xlink:href="#2" x="54" y="2"></use><use xlink:href="#2" x="2" y="28"></use><use xlink:href="#2" x="28" y="28"></use><use xlink:href="#2" x="54" y="28"></use><use xlink:href="#2" x="80" y="28"></use><use xlink:href="#2" x="2" y="54"></use><use xlink:href="#1" x="27" y="53"></use><use xlink:href="#2" x="54" y="54"></use><use xlink:href="#2" x="80" y="54"></use><use xlink:href="#2" x="2" y="80"></use><use xlink:href="#2" x="28" y="80"></use><use xlink:href="#2" x="54" y="80"></use><use xlink:href="#2" x="80" y="80"></use><use xlink:href="#2" x="28" y="106"></use><use xlink:href="#2" x="54" y="106"></use></svg></td> </tr>
-  <tr> <td>反重力</td><td>y-4</td><td><svg viewBox="0 0 130 130" style="vertical-align:top;width:130px;height:130px;width:130px!important;height:130px!important"><defs><rect id="1" fill="#27a6f3" width="22" height="22"></rect><rect id="2" fill="none" stroke="gray" stroke-width="2" width="20" height="20"></rect></defs><use xlink:href="#2" x="2" y="2"></use><use xlink:href="#2" x="28" y="2"></use><use xlink:href="#2" x="54" y="2"></use><use xlink:href="#2" x="2" y="28"></use><use xlink:href="#2" x="28" y="28"></use><use xlink:href="#2" x="54" y="28"></use><use xlink:href="#2" x="80" y="28"></use><use xlink:href="#2" x="2" y="54"></use><use xlink:href="#1" x="27" y="53"></use><use xlink:href="#2" x="54" y="54"></use><use xlink:href="#2" x="80" y="54"></use><use xlink:href="#2" x="106" y="54"></use><use xlink:href="#2" x="2" y="80"></use><use xlink:href="#2" x="28" y="80"></use><use xlink:href="#2" x="54" y="80"></use><use xlink:href="#2" x="80" y="80"></use><use xlink:href="#2" x="2" y="106"></use><use xlink:href="#2" x="28" y="106"></use><use xlink:href="#2" x="54" y="106"></use></svg></td> </tr>
-  <tr> <td class="g">3格霰弹</td><td>1-3</td><td><svg viewBox="0 0 52 78" style="vertical-align:top;width:52px;height:78px;width:52px!important;height:78px!important"><defs><rect id="1" fill="#27a6f3" width="22" height="22"></rect><rect id="2" fill="none" stroke="gray" stroke-width="2" width="20" height="20"></rect></defs><use xlink:href="#2" x="28" y="2"></use><use xlink:href="#1" x="1" y="27"></use><use xlink:href="#2" x="28" y="28"></use><use xlink:href="#2" x="28" y="54"></use></svg></td> </tr>
-  <tr> <td>4格霰弹</td><td>2-4</td><td><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 78 78" style="vertical-align:top;width:78px;height:78px;width:78px!important;height:78px!important"><defs><style>.cls-1{fill:#27a6f3;width:22px;height:22px}.cls-2{fill:none;stroke:gray;stroke-width:2px;width:20px;height:20px}</style></defs><rect class="cls-2" x="28" y="2"></rect><rect class="cls-1" x="1" y="27"></rect><rect class="cls-2" x="28" y="28"></rect><rect class="cls-2" x="54" y="28"></rect><rect class="cls-2" x="28" y="54"></rect></svg></td> </tr>
-  <tr> <td>6格霰弹</td><td>2-5</td><td><svg viewBox="0 0 78 78" style="vertical-align:top;width:78px;height:78px;width:78px!important;height:78px!important"><defs><rect id="1" fill="#27a6f3" width="22" height="22"></rect><rect id="2" fill="none" stroke="gray" stroke-width="2" width="20" height="20"></rect></defs><use xlink:href="#2" x="28" y="2"></use><use xlink:href="#2" x="54" y="2"></use><use xlink:href="#1" x="1" y="27"></use><use xlink:href="#2" x="28" y="28"></use><use xlink:href="#2" x="54" y="28"></use><use xlink:href="#2" x="28" y="54"></use><use xlink:href="#2" x="54" y="54"></use></svg></td> </tr>
-  <tr> <td class="g">7格霰弹</td><td>3-13</td><td><svg viewBox="0 0 104 78" style="vertical-align:top;width:104px;height:78px;width:104px!important;height:78px!important"><defs><rect id="1" fill="#27a6f3" width="22" height="22"></rect><rect id="2" fill="none" stroke="gray" stroke-width="2" width="20" height="20"></rect></defs><use xlink:href="#2" x="28" y="2"></use><use xlink:href="#2" x="54" y="2"></use><use xlink:href="#1" x="1" y="27"></use><use xlink:href="#2" x="28" y="28"></use><use xlink:href="#2" x="54" y="28"></use><use xlink:href="#2" x="80" y="28"></use><use xlink:href="#2" x="28" y="54"></use><use xlink:href="#2" x="54" y="54"></use></svg></td> </tr>
-  <tr> <td>9格霰弹</td><td>3-14</td><td><svg viewBox="0 0 104 78" style="vertical-align:top;width:104px;height:78px;width:104px!important;height:78px!important"><defs><rect id="1" fill="#27a6f3" width="22" height="22"></rect><rect id="2" fill="none" stroke="gray" stroke-width="2" width="20" height="20"></rect></defs><use xlink:href="#2" x="28" y="2"></use><use xlink:href="#2" x="54" y="2"></use><use xlink:href="#2" x="80" y="2"></use><use xlink:href="#1" x="1" y="27"></use><use xlink:href="#2" x="28" y="28"></use><use xlink:href="#2" x="54" y="28"></use><use xlink:href="#2" x="80" y="28"></use><use xlink:href="#2" x="28" y="54"></use><use xlink:href="#2" x="54" y="54"></use><use xlink:href="#2" x="80" y="54"></use></svg></td> </tr>
-  <tr> <td class="g">10格霰弹</td><td>4-2</td><td><svg viewBox="0 0 130 78" style="vertical-align:top;width:130px;height:78px;width:130px!important;height:78px!important"><defs><rect id="1" fill="#27a6f3" width="22" height="22"></rect><rect id="2" fill="none" stroke="gray" stroke-width="2" width="20" height="20"></rect></defs><use xlink:href="#2" x="28" y="2"></use><use xlink:href="#2" x="54" y="2"></use><use xlink:href="#2" x="80" y="2"></use><use xlink:href="#1" x="1" y="27"></use><use xlink:href="#2" x="28" y="28"></use><use xlink:href="#2" x="54" y="28"></use><use xlink:href="#2" x="80" y="28"></use><use xlink:href="#2" x="106" y="28"></use><use xlink:href="#2" x="28" y="54"></use><use xlink:href="#2" x="54" y="54"></use><use xlink:href="#2" x="80" y="54"></use></svg></td> </tr>
-  <tr> <td class="g">13格</td><td>3-5</td><td><svg viewBox="0 0 78 130" style="vertical-align:top;width:78px;height:130px;width:78px!important;height:130px!important"><defs><rect id="1" fill="#27a6f3" width="22" height="22"></rect><rect id="2" fill="none" stroke="gray" stroke-width="2" width="20" height="20"></rect></defs><use xlink:href="#2" x="2" y="2"></use><use xlink:href="#2" x="28" y="2"></use><use xlink:href="#2" x="2" y="28"></use><use xlink:href="#2" x="28" y="28"></use><use xlink:href="#2" x="54" y="28"></use><use xlink:href="#1" x="1" y="53"></use><use xlink:href="#2" x="28" y="54"></use><use xlink:href="#2" x="54" y="54"></use><use xlink:href="#2" x="2" y="80"></use><use xlink:href="#2" x="28" y="80"></use><use xlink:href="#2" x="54" y="80"></use><use xlink:href="#2" x="2" y="106"></use><use xlink:href="#2" x="28" y="106"></use></svg></td> </tr>
-  <tr> <td>序时之匙</td><td>3-4</td><td><svg viewBox="0 0 104 130" style="vertical-align:top;width:104px;height:130px;width:104px!important;height:130px!important"><defs><rect id="1" fill="#27a6f3" width="22" height="22"></rect><rect id="2" fill="none" stroke="gray" stroke-width="2" width="20" height="20"></rect></defs><use xlink:href="#2" x="2" y="2"></use><use xlink:href="#2" x="28" y="2"></use><use xlink:href="#2" x="54" y="2"></use><use xlink:href="#2" x="2" y="28"></use><use xlink:href="#2" x="28" y="28"></use><use xlink:href="#2" x="54" y="28"></use><use xlink:href="#2" x="80" y="28"></use><use xlink:href="#1" x="1" y="53"></use><use xlink:href="#2" x="28" y="54"></use><use xlink:href="#2" x="54" y="54"></use><use xlink:href="#2" x="80" y="54"></use><use xlink:href="#2" x="2" y="80"></use><use xlink:href="#2" x="28" y="80"></use><use xlink:href="#2" x="54" y="80"></use><use xlink:href="#2" x="80" y="80"></use><use xlink:href="#2" x="2" y="106"></use><use xlink:href="#2" x="28" y="106"></use><use xlink:href="#2" x="54" y="106"></use></svg></td> </tr>
-  <tr> <td>序时之匙</td><td>3-15</td><td><svg viewBox="0 0 104 130" style="vertical-align:top;width:104px;height:130px;width:104px!important;height:130px!important"><defs><rect id="1" fill="#27a6f3" width="22" height="22"></rect><rect id="2" fill="none" stroke="gray" stroke-width="2" width="20" height="20"></rect></defs><use xlink:href="#2" x="2" y="2"></use><use xlink:href="#2" x="28" y="2"></use><use xlink:href="#2" x="54" y="2"></use><use xlink:href="#2" x="2" y="28"></use><use xlink:href="#2" x="28" y="28"></use><use xlink:href="#2" x="54" y="28"></use><use xlink:href="#2" x="80" y="28"></use><use xlink:href="#1" x="1" y="53"></use><use xlink:href="#2" x="28" y="54"></use><use xlink:href="#2" x="54" y="54"></use><use xlink:href="#2" x="80" y="54"></use><use xlink:href="#2" x="2" y="80"></use><use xlink:href="#2" x="28" y="80"></use><use xlink:href="#2" x="54" y="80"></use><use xlink:href="#2" x="80" y="80"></use><use xlink:href="#2" x="2" y="106"></use><use xlink:href="#2" x="28" y="106"></use><use xlink:href="#2" x="54" y="106"></use></svg></td> </tr>
-  <tr> <td>精一守林人</td><td>3-9</td><td><svg viewBox="0 0 130 130" style="vertical-align:top;width:130px;height:130px;width:130px!important;height:130px!important"><defs><rect id="1" fill="#27a6f3" width="22" height="22"></rect><rect id="2" fill="none" stroke="gray" stroke-width="2" width="20" height="20"></rect></defs><use xlink:href="#2" x="2" y="2"></use><use xlink:href="#2" x="28" y="2"></use><use xlink:href="#2" x="54" y="2"></use><use xlink:href="#2" x="2" y="28"></use><use xlink:href="#2" x="28" y="28"></use><use xlink:href="#2" x="54" y="28"></use><use xlink:href="#2" x="80" y="28"></use><use xlink:href="#1" x="1" y="53"></use><use xlink:href="#2" x="28" y="54"></use><use xlink:href="#2" x="54" y="54"></use><use xlink:href="#2" x="80" y="54"></use><use xlink:href="#2" x="106" y="54"></use><use xlink:href="#2" x="2" y="80"></use><use xlink:href="#2" x="28" y="80"></use><use xlink:href="#2" x="54" y="80"></use><use xlink:href="#2" x="80" y="80"></use><use xlink:href="#2" x="2" y="106"></use><use xlink:href="#2" x="28" y="106"></use><use xlink:href="#2" x="54" y="106"></use></svg></td> </tr>
-  <tr> <td>反向1格</td><td>b-1</td><td><svg viewBox="0 0 52 26" style="vertical-align:top;width:52px;height:26px;width:52px!important;height:26px!important"><defs><rect id="1" fill="#27a6f3" width="22" height="22"></rect><rect id="2" fill="none" stroke="gray" stroke-width="2" width="20" height="20"></rect></defs><use xlink:href="#2" x="2" y="2"></use><use xlink:href="#1" x="27" y="1"></use></svg></td> </tr>
-  <tr> <td>唱沙</td><td>唱沙</td><td><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 182 182" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" style="vertical-align:top;width:182px;height:182px;width:182px!important;height:182px!important"><defs><rect id="1" fill="#27a6f3" width="22" height="22"></rect><rect id="2" fill="none" stroke="gray" stroke-width="2" width="20" height="20"></rect></defs><use xlink:href="#2" x="80" y="2"></use><use xlink:href="#2" x="80" y="28"></use><use xlink:href="#2" x="80" y="54"></use><use xlink:href="#2" x="2" y="80"></use><use xlink:href="#2" x="28" y="80"></use><use xlink:href="#2" x="54" y="80"></use><use xlink:href="#1" x="79" y="79"></use><use xlink:href="#2" x="106" y="80"></use><use xlink:href="#2" x="132" y="80"></use><use xlink:href="#2" x="158" y="80"></use><use xlink:href="#2" x="80" y="106"></use><use xlink:href="#2" x="80" y="132"></use><use xlink:href="#2" x="80" y="158"></use></svg></td> </tr>
-</table>
