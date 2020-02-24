@@ -25,7 +25,7 @@ TinyDescriptionFont = {"family": "Source Han Sans SC", "size": 5}
 ExtraTinyDescriptionFont = {"family": "Source Han Sans SC", "size": 4}
 
 
-def plot_enemy_info(figure, enemy):
+def plot_enemy_info(figure, enemy, simulate_time=300):
     """
     Draw the image and show basic info of enemy target.
 
@@ -42,14 +42,26 @@ def plot_enemy_info(figure, enemy):
     hp = enemy_dict[enemy]["HP"]
     # Avoid slay line greater than 135,000 (which will be covered by legend, making it hard to recognize),
     # and also making it as big as possible, as too low slay line will result in too short slay time.
-    if hp > 67500:
-        target_num = 1
-    elif hp > 27000:
-        target_num = int(90000 / hp) + 1
-    elif hp > 13500:
-        target_num = 5
+    if 200 <= simulate_time:
+        if hp > 67500:
+            target_num = 1
+        elif hp > 27000:
+            target_num = int(90000 / hp) + 1
+        elif hp > 13500:
+            target_num = 5
+        else:
+            target_num = 5 * int(18000 / hp) + 5
+    elif 100 <= simulate_time < 200:
+        if hp > 40000:
+            target_num = 1
+        elif hp > 12500:
+            target_num = int(50000 / hp) + 1
+        elif hp > 5000:
+            target_num = 5
+        else:
+            target_num = 10
     else:
-        target_num = 5 * int(18000 / hp) + 5
+        target_num = 1
     target_hp = hp * target_num
     defense = enemy_dict[enemy]["def"]
     mr = enemy_dict[enemy]["MR"]
@@ -143,14 +155,15 @@ def plot_curve(char_dict, stage, write_file, axes, pick_list, defense, mr, simul
                 if dmg > target_hp:
                     slay_time = t
                     break
-            if 0 <= slay_time <= 300:
+            if 0 <= slay_time <= simulate_time:
                 slay_text = "%s%s, %.1f s" % (char.name, char.skill_order, slay_time)
                 slay_list.append([char, slay_text, slay_time])
 
     return legend_list, slay_list
 
 
-def plot_legend(axes, legend_list, damage_baseline=100000, ignore_polish=False, multi_target_label=False):
+def plot_legend(axes, legend_list, damage_baseline=100000,
+                ignore_polish=False, multi_target_label=False, simulate_time=300):
     """
     Plot legends w.r.t. legend list on given axes
 
@@ -205,14 +218,17 @@ def plot_legend(axes, legend_list, damage_baseline=100000, ignore_polish=False, 
         else:
             dmg_ratio = r"99k%+"
 
-        axes.plot([0, 300], [0, polish_line], c="black", alpha=0.8, ls="-", lw=3)
-        axes.plot([305, 325, 340, 345], [polish_line, polish_line, polish_y_pos, polish_y_pos],
+        axes.plot([0, simulate_time], [0, polish_line], c="black", alpha=0.8, ls="-", lw=3)
+        axes.plot([simulate_time * 61 / 60, simulate_time * 13 / 12, simulate_time * 17 / 15, simulate_time * 23 / 20],
+                  [polish_line, polish_line, polish_y_pos, polish_y_pos],
                   c="black", alpha=0.8, ls="-", lw=2)
-        axes.plot([348, 355.7], [polish_y_pos, polish_y_pos], c="black", alpha=0.3, ls="-", lw=9.3)
-        axes.plot([360, 420], [polish_y_pos, polish_y_pos], c="black", alpha=0.1, ls="-", lw=9.3)
-        axes.text(346.3, polish_y_pos - max_damage / 120, dmg_ratio, fontdict=DescriptionFont)
-        axes.text(359, polish_y_pos - max_damage / 120, "抛光线", fontdict=DescriptionFont)
-        axes.text(405, polish_y_pos - max_damage / 120, polish_line, fontdict=DescriptionFont)
+        axes.plot([simulate_time * 87 / 75, simulate_time * 355.7 / 300], [polish_y_pos, polish_y_pos],
+                  c="black", alpha=0.3, ls="-", lw=9.3)
+        axes.plot([simulate_time * 1.2, simulate_time * 1.4], [polish_y_pos, polish_y_pos],
+                  c="black", alpha=0.1, ls="-", lw=9.3)
+        axes.text(simulate_time * 346.3 / 300, polish_y_pos - max_damage / 120, dmg_ratio, fontdict=DescriptionFont)
+        axes.text(simulate_time * 359 / 300, polish_y_pos - max_damage / 120, "抛光线", fontdict=DescriptionFont)
+        axes.text(simulate_time * 27 / 20, polish_y_pos - max_damage / 120, polish_line, fontdict=DescriptionFont)
 
     # Plot legends
     for char, name, dmg, text_y_pos in legend_list:
@@ -226,35 +242,45 @@ def plot_legend(axes, legend_list, damage_baseline=100000, ignore_polish=False, 
         else:
             dmg_ratio = r"99k%+"
 
-        axes.plot([305, 325, 340, 345], [dmg, dmg, text_y_pos, text_y_pos], c=color_dict[char.name],
+        axes.plot([simulate_time * 61 / 60, simulate_time * 13 / 12, simulate_time * 17 / 15, simulate_time * 23 / 20],
+                  [dmg, dmg, text_y_pos, text_y_pos], c=color_dict[char.name],
                   alpha=0.8, ls=ls_assist_dict[char.rarity], lw=lw_dict[char.skill_order] / 1.5,
                   marker=mk_dict[char.rarity], ms=ms_dict[char.skill_order] / 1.5)
-        axes.plot([348, 355.7], [text_y_pos, text_y_pos], c=color_dict[char.name], alpha=0.4, ls="-", lw=9.3)
-        axes.plot([360, 420], [text_y_pos, text_y_pos], c=color_dict[char.name], alpha=0.15, ls="-", lw=9.3)
-        axes.text(346.3, text_y_pos - max_damage / 120, dmg_ratio, fontdict=DescriptionFont)
+        axes.plot([simulate_time * 87 / 75, simulate_time * 355.7 / 300],
+                  [text_y_pos, text_y_pos], c=color_dict[char.name], alpha=0.4, ls="-", lw=9.3)
+        axes.plot([simulate_time * 1.2, simulate_time * 1.4], [text_y_pos, text_y_pos],
+                  c=color_dict[char.name], alpha=0.15, ls="-", lw=9.3)
+        axes.text(simulate_time * 346.3 / 300, text_y_pos - max_damage / 120, dmg_ratio, fontdict=DescriptionFont)
         if len(name) <= 15:
-            axes.text(359, text_y_pos - max_damage / 120, name, fontdict=DescriptionFont)
+            axes.text(simulate_time * 359 / 300, text_y_pos - max_damage / 120, name,
+                      fontdict=DescriptionFont)
         elif len(name) <= 18:
-            axes.text(359, text_y_pos - max_damage / 120, name, fontdict=MediumSmallDescriptionFont)
+            axes.text(simulate_time * 359 / 300, text_y_pos - max_damage / 120, name,
+                      fontdict=MediumSmallDescriptionFont)
         else:
-            axes.text(359, text_y_pos - max_damage / 120, name, fontdict=SmallDescriptionFont)
-        axes.text(405, text_y_pos - max_damage / 120, dmg_value, fontdict=DescriptionFont)
+            axes.text(simulate_time * 359 / 300, text_y_pos - max_damage / 120, name,
+                      fontdict=SmallDescriptionFont)
+        axes.text(simulate_time * 27 / 20, text_y_pos - max_damage / 120, dmg_value, fontdict=DescriptionFont)
 
         if multi_target_label:
-            axes.plot([425.5, 452.5], [text_y_pos, text_y_pos], c=color_dict[char.name], alpha=0.2, ls="-", lw=8)
+            axes.plot([simulate_time * 425.5 / 300, simulate_time * 452.5 / 300],
+                      [text_y_pos, text_y_pos], c=color_dict[char.name], alpha=0.2, ls="-", lw=8)
             desc = char.multi_target_desc
             if desc != "单体攻击":
-                axes.text(424.7, text_y_pos - max_damage / 200, desc, fontdict=SmallDescriptionFont)
+                axes.text(simulate_time * 424.7 / 300, text_y_pos - max_damage / 200, desc,
+                          fontdict=SmallDescriptionFont)
             else:
-                axes.text(424.7, text_y_pos - max_damage / 200, desc, fontdict=SmallDescriptionFont, alpha=0.5)
+                axes.text(simulate_time * 424.7 / 300, text_y_pos - max_damage / 200, desc,
+                          fontdict=SmallDescriptionFont, alpha=0.5)
 
     if multi_target_label:
-        axes.plot([426.5, 450], [max_damage * 41 / 40, max_damage * 41 / 40], c="black", alpha=0.1, ls="-", lw=9.3)
-        axes.text(426, max_damage * 611 / 600, "设定攻击目标数", fontdict=MediumSmallDescriptionFont)
+        axes.plot([simulate_time * 853 / 600, simulate_time * 1.5], [max_damage * 41 / 40, max_damage * 41 / 40],
+                  c="black", alpha=0.1, ls="-", lw=9.3)
+        axes.text(simulate_time * 71 / 50, max_damage * 611 / 600, "设定攻击目标数", fontdict=MediumSmallDescriptionFont)
 
     # Annotate damage baseline
     if damage_baseline is not None:
-        axes.text(305, damage_baseline - max_damage / 120, "伤害基准线", fontdict=DescriptionFont)
+        axes.text(simulate_time * 61 / 60, damage_baseline - max_damage / 120, "伤害基准线", fontdict=DescriptionFont)
 
     # Generate regular legend if the number of legend is not more than 30
     if len(legend_list) <= 30:
@@ -264,7 +290,8 @@ def plot_legend(axes, legend_list, damage_baseline=100000, ignore_polish=False, 
     return max_damage
 
 
-def plot_slay_line(axes, slay_list, target_num, enemy, target_hp, max_damage, show_slay_time_tag=True):
+def plot_slay_line(axes, slay_list, target_num, enemy, target_hp, max_damage,
+                   show_slay_time_tag=True, simulate_time=300):
     """
     Plot slay line on given axes.
 
@@ -280,13 +307,14 @@ def plot_slay_line(axes, slay_list, target_num, enemy, target_hp, max_damage, sh
     """
     # Plot the slay line of given enemy
     slay_line_text = "斩杀线: %s个%s\n总HP: %-6d" % (target_num, enemy, target_hp)
-    axes.plot([-5, 302], [target_hp, target_hp], label=None, c="black", alpha=0.75, ls="-", lw=2)
-    if max_damage > 520000:
+    axes.plot([-5, simulate_time * 151 / 150], [target_hp, target_hp],
+              label=None, c="black", alpha=0.75, ls="-", lw=2)
+    if max_damage > 520000 * simulate_time / 300:
         axes.text(-3, target_hp + max_damage / 130, slay_line_text, fontdict=BigDescriptionFont,
                   horizontalalignment='left', verticalalignment='bottom')
         axes.plot([-5, -5, 30], [target_hp, target_hp + max_damage / 12, target_hp + max_damage / 12],
                   label=None, c="black", alpha=0.5, ls="-", lw=1)
-    elif max_damage > 300000:
+    elif max_damage > 300000 * simulate_time / 300:
         axes.text(-3, target_hp - max_damage / 80, slay_line_text, fontdict=BigDescriptionFont,
                   horizontalalignment='left', verticalalignment='top')
         axes.plot([-5, -5, 30], [target_hp, target_hp - max_damage / 12, target_hp - max_damage / 12],
@@ -427,17 +455,17 @@ def set_damage_baseline(char_dict, stage, baseline, defense, mr, target_hp, simu
     return damage_baseline
 
 
-def configure_mpl(axes, title, multi_target_lable=False):
+def configure_mpl(axes, title, multi_target_lable=False, simulate_time=300):
     axes.set_title(title, fontdict=ExtraGiantFont)
     axes.set_xlabel('时间', fontdict=GiantFont)
     axes.set_ylabel('伤害总量', fontdict=GiantFont)
     if multi_target_lable:
-        axes.set_xlim([-10, 460])
+        axes.set_xlim([-10, simulate_time * 23 / 15])
     else:
-        axes.set_xlim([-10, 430])
-    axes.set_xticks([30 * k for k in range(11)])
+        axes.set_xlim([-10, simulate_time * 43 / 30])
+    axes.set_xticks([simulate_time / 10 * k for k in range(11)])
     axes.yaxis.set_major_locator(MultipleLocator(50000))
-    axes.grid(axis="both", ls=(10, (30, 5)), c="lightgray")
+    axes.grid(axis="both", ls=(simulate_time / 30, (simulate_time / 10, simulate_time / 60)), c="lightgray")
     axes.margins(0, 0.05)
     plt.subplots_adjust(top=0.95, bottom=0.08, right=0.98, left=0.07, hspace=0, wspace=0)
 
@@ -512,7 +540,7 @@ def plot(stage, pick_list, pick_list_name, baseline, enemy=None, defense=300, mr
         os.mkdir("data/")
 
     if enemy:
-        target_num, target_hp, defense, mr = plot_enemy_info(fig, enemy)
+        target_num, target_hp, defense, mr = plot_enemy_info(fig, enemy, simulate_time=simulate_time)
         file_name, record_name = find_filename(stage, pick_list_name, multitarget2str[multi_target], simulate_time,
                                                enemy=enemy)
     else:
@@ -525,7 +553,7 @@ def plot(stage, pick_list, pick_list_name, baseline, enemy=None, defense=300, mr
 
     # Configure Matplotlib
     title = "%s，%s防御，%s法抗，%.0f秒内输出曲线，%s" % (stage, defense, mr, simulate_time, multitarget2str[multi_target])
-    configure_mpl(ax, title, multi_target)
+    configure_mpl(ax, title, multi_target, simulate_time=simulate_time)
 
     # Set damage baseline
     damage_baseline = set_damage_baseline(char_dict, stage, baseline, defense, mr, target_hp,
@@ -537,11 +565,12 @@ def plot(stage, pick_list, pick_list_name, baseline, enemy=None, defense=300, mr
                                         show_slay_line=show_slay_line, target_hp=target_hp)
 
     # Plot legends
-    max_damage = plot_legend(ax, legend_list, damage_baseline, ignore_polish, multi_target)
+    max_damage = plot_legend(ax, legend_list, damage_baseline, ignore_polish, multi_target,
+                             simulate_time=simulate_time)
 
     # Plot slay line
     if show_slay_line:
-        plot_slay_line(ax, slay_list, target_num, enemy, target_hp, max_damage)
+        plot_slay_line(ax, slay_list, target_num, enemy, target_hp, max_damage, simulate_time=simulate_time)
 
     # Save result
     plt.savefig(file_name + ".pdf")
