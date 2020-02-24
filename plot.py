@@ -84,7 +84,7 @@ def plot_enemy_info(figure, enemy):
     return target_num, target_hp, defense, mr
 
 
-def plot_curve(char_dict, stage, write_file, axes, pick_list, defense, mr,
+def plot_curve(char_dict, stage, write_file, axes, pick_list, defense, mr, simulate_time=300,
                baseline=None, show_slay_line=False, target_hp=None):
     """
     Plot damage curves for characters in `pick_list`.
@@ -98,6 +98,7 @@ def plot_curve(char_dict, stage, write_file, axes, pick_list, defense, mr,
                                 Details refer to `Overall parameters introduction`
     :param defense:         <int> defense of enemy
     :param mr:              <int> magic resistance of enemy
+    :param simulate_time:   <int or float> time length to simulate
     :param baseline:        <str> name of baseline character
                                 Details refer to `Overall parameters introduction`
     :param show_slay_line:  <bool> whether to show slay line or not
@@ -118,7 +119,7 @@ def plot_curve(char_dict, stage, write_file, axes, pick_list, defense, mr,
             continue
 
         # Plot damage curve for each character
-        damage_node = char.simulate(defense, mr)
+        damage_node = char.simulate(simulate_time, defense, mr)
         damage_record = "\t".join(["(%.3f, %.0f)" % (x[0], x[1]) for x in damage_node])
 
         x_labels = [x[0] for x in damage_node]
@@ -330,25 +331,39 @@ def plot_slay_line(axes, slay_list, target_num, enemy, target_hp, max_damage, sh
                           horizontalalignment='right', verticalalignment='top')
 
 
-def find_available_filename(stage, pick_list_name, multi_target_desc, enemy=None, defense=None, mr=None):
+def find_filename(stage, pick_list_name, multi_target_desc, simulation_time, **kwargs):
     """
     Find a valid filename to save figures
     """
     if not os.path.exists("figure/"):
         os.mkdir("figure/")
+    if not os.path.exists("data/"):
+        os.mkdir("data/")
+
+    enemy = kwargs.get("enemy") or kwargs.get("Enemy")
     if enemy:
-        file_name = "figure/%s_%s_%s_%s" % (stage, enemy, pick_list_name, multi_target_desc)
+        file_name = "figure/%s_%s_%s_%.0f秒_%s" % (stage, pick_list_name, enemy,
+                                                  simulation_time, multi_target_desc)
         cnt = 0
         while os.path.exists(file_name + ".pdf") or os.path.exists(file_name + ".png"):
             cnt += 1
-            file_name = "figure/%s_%s_%s_%s(%s)" % (stage, enemy, pick_list_name, multi_target_desc, cnt)
+            file_name = "figure/%s_%s_%s_%.0f秒_%s(%d)" % (stage, pick_list_name, enemy,
+                                                          simulation_time, multi_target_desc, cnt)
+        record_name = "data/DamageRecord_%s_%s_%s_%.0f秒_%s.txt" % (stage, pick_list_name, enemy,
+                                                                   simulation_time, multi_target_desc)
     else:
-        file_name = "figure/%s_%s防_%s法抗_%s_%s" % (stage, defense, mr, pick_list_name, multi_target_desc)
+        defense = kwargs.get("defense") or kwargs.get("Defense")
+        mr = kwargs.get("mr") or kwargs.get("MR") or kwargs.get("magic_resistance") or kwargs.get("MagicResistance")
+        file_name = "figure/%s_%s_%.0f防_%.0f法抗_%.0f秒_%s" % (stage, pick_list_name, defense, mr,
+                                                            simulation_time, multi_target_desc)
         cnt = 0
         while os.path.exists(file_name + ".pdf") or os.path.exists(file_name + ".png"):
             cnt += 1
-            file_name = "figure/%s_%s防_%s法抗_%s_%s(%s)" % (stage, defense, mr, pick_list_name, multi_target_desc, cnt)
-    return file_name
+            file_name = "figure/%s_%s_%.0f防_%.0f法抗_%.0f秒_%s(%d)" % (stage, pick_list_name, defense, mr,
+                                                                    simulation_time, multi_target_desc, cnt)
+        record_name = "data/DamageRecord_%s_%s_%.0f防_%.0f法抗_%.0f秒_%s.txt" % (stage, pick_list_name, defense, mr,
+                                                                             simulation_time, multi_target_desc)
+    return file_name, record_name
 
 
 def description_level_change(stage, char, desc):
@@ -391,7 +406,7 @@ def description_level_change(stage, char, desc):
     return desc
 
 
-def set_damage_baseline(char_dict, stage, baseline, defense, mr, target_hp):
+def set_damage_baseline(char_dict, stage, baseline, defense, mr, target_hp, simulate_time=300):
     """
     Set damage baseline.
 
@@ -404,7 +419,7 @@ def set_damage_baseline(char_dict, stage, baseline, defense, mr, target_hp):
                                               the damaging ability of each character.
     """
     if baseline:
-        damage_baseline = char_dict[stage + "-" + baseline].simulate(defense, mr)[-1][1]
+        damage_baseline = char_dict[stage + "-" + baseline].simulate(simulate_time, defense, mr)[-1][1]
     elif target_hp:
         damage_baseline = target_hp
     else:
@@ -427,7 +442,7 @@ def configure_mpl(axes, title, multi_target_lable=False):
     plt.subplots_adjust(top=0.95, bottom=0.08, right=0.98, left=0.07, hspace=0, wspace=0)
 
 
-def plot(stage, pick_list, pick_list_name, baseline, enemy=None, defense=300, mr=30,
+def plot(stage, pick_list, pick_list_name, baseline, enemy=None, defense=300, mr=30, simulate_time=300,
          show_slay_line=True, multi_target=True, ignore_polish=True):
     """
     Plot damage curve.
@@ -440,7 +455,7 @@ def plot(stage, pick_list, pick_list_name, baseline, enemy=None, defense=300, mr
                                 Element Example:
                                     "陈": ensure all data of 3 skills of 陈 will be plotted
                                     "陈2": only plot the data of 陈 with her 2nd skill
-    :param pick_list_name:  <str> the name of picklist, e.g. "56星近卫"
+    :param pick_list_name:  <str> the name of pick list, e.g. "56星近卫"
     :param baseline:        <str> A string indicating the baseline character.
                                 If `BaselineChar` is assigned, the damage curve figure will show the damage curve of the
                                   character regardless of whether the character is in `PickList`. Her final damage will
@@ -462,6 +477,7 @@ def plot(stage, pick_list, pick_list_name, baseline, enemy=None, defense=300, mr
     :param mr:              <int> Magic resistance value used in calculation.
                                 It is effective only if `Enemy` is not assigned or assigned as empty string.
                                 Default: 30
+    :param simulate_time:   <int or float> time length to simulate
     :param show_slay_line:  <bool> Whether to show slay line or not.
                                 If True, the figure of damage curve will show an extra line to indicate the HP of enemy
                                   target and give an intuitive display of how much time a character takes to slay it.
@@ -489,7 +505,7 @@ def plot(stage, pick_list, pick_list_name, baseline, enemy=None, defense=300, mr
     :return: None
     """
     # Prepare
-    f = csv.DictReader(open("raw/RawData.csv", 'r'))
+    f = csv.DictReader(open("raw/RawData.csv", 'r', encoding='utf-8'))
     fig = plt.figure(num=1, figsize=(15, 8), dpi=240)
     ax = fig.add_subplot(1, 1, 1)
     if not os.path.exists("data/"):
@@ -497,34 +513,35 @@ def plot(stage, pick_list, pick_list_name, baseline, enemy=None, defense=300, mr
 
     if enemy:
         target_num, target_hp, defense, mr = plot_enemy_info(fig, enemy)
-        write_file = open("data/DamageRecord_%s_%s_%s.txt" % (stage, enemy, multitarget2str[multi_target]), "w")
-        file_name = find_available_filename(stage, pick_list_name, multitarget2str[multi_target], enemy=enemy)
+        file_name, record_name = find_filename(stage, pick_list_name, multitarget2str[multi_target], simulate_time,
+                                               enemy=enemy)
     else:
         target_num, target_hp = None, None
         show_slay_line = False
-        write_file = open("data/DamageRecord_%s_%s_%s_%s.txt" % (stage, defense, mr, multitarget2str[multi_target]),
-                          "w")
-        file_name = find_available_filename(stage, pick_list_name, multitarget2str[multi_target], defense=defense,
-                                            mr=mr)
+        file_name, record_name = find_filename(stage, pick_list_name, multitarget2str[multi_target], simulate_time,
+                                               defense=defense, mr=mr)
+    write_file = open(record_name, "w", encoding='utf-8')
     char_dict = modify_data(f, stage, multi_target)
 
-    # Configure Matplotliba
-    title = "%s，%s防御，%s法抗，300秒内输出曲线，%s" % (stage, defense, mr, multitarget2str[multi_target])
+    # Configure Matplotlib
+    title = "%s，%s防御，%s法抗，%.0f秒内输出曲线，%s" % (stage, defense, mr, simulate_time, multitarget2str[multi_target])
     configure_mpl(ax, title, multi_target)
 
     # Set damage baseline
-    damage_baseline = set_damage_baseline(char_dict, stage, baseline, defense, mr, target_hp)
+    damage_baseline = set_damage_baseline(char_dict, stage, baseline, defense, mr, target_hp,
+                                          simulate_time=simulate_time)
 
     # Plot curve
-    legend_list, slay_list = plot_curve(char_dict, stage, write_file, ax, pick_list, defense, mr, baseline,
-                                        show_slay_line, target_hp)
+    legend_list, slay_list = plot_curve(char_dict, stage, write_file, ax, pick_list, defense, mr,
+                                        simulate_time=simulate_time, baseline=baseline,
+                                        show_slay_line=show_slay_line, target_hp=target_hp)
 
     # Plot legends
-    max_mamage = plot_legend(ax, legend_list, damage_baseline, ignore_polish, multi_target)
+    max_damage = plot_legend(ax, legend_list, damage_baseline, ignore_polish, multi_target)
 
     # Plot slay line
     if show_slay_line:
-        plot_slay_line(ax, slay_list, target_num, enemy, target_hp, max_mamage)
+        plot_slay_line(ax, slay_list, target_num, enemy, target_hp, max_damage)
 
     # Save result
     plt.savefig(file_name + ".pdf")
@@ -627,8 +644,9 @@ if __name__ == "__main__":
     ShowSlayLine = Pick.get("ShowSlayLine", True)
     MultiTarget = Pick.get("MultiTarget", True)
     IgnorePolish = Pick.get("IgnorePolish", False)
+    SimulationTime = 300
     # End Params
 
     print(PickList, Enemy)
-    plot(Stage, PickList, PickListName, Baseline, Enemy,
+    plot(Stage, PickList, PickListName, Baseline, Enemy, simulate_time=SimulationTime,
          show_slay_line=ShowSlayLine, multi_target=MultiTarget, ignore_polish=IgnorePolish)

@@ -11,9 +11,9 @@ import re
 import csv
 import os
 
-skill_raw_data = open("raw/skill_table.json", 'r').read()
+skill_raw_data = open("raw/skill_table.json", 'r', encoding='utf-8').read()
 skill_dict = json.loads(skill_raw_data)
-char_raw_data = open("raw/character_table.json", 'r').read()
+char_raw_data = open("raw/character_table.json", 'r', encoding='utf-8').read()
 char_dict = json.loads(char_raw_data)
 potential_key = {0: "maxHP", 1: "atk", 2: "def", 3: "magicResistance",
                  4: "cost", 7: "attackSpeed", 21: "respawnTime"}
@@ -396,7 +396,7 @@ def find_29010_data(name, skill_order):
 
 
 def main():
-    f = open("raw/RawData.csv", "w")
+    f = open("raw/RawData.csv", "w", encoding='utf-8')
     f = csv.writer(f, dialect="excel")
     header = ["Stage", "Profession", "Detailed Profession",
               "Char Name", "Skill Order", "Rarity",

@@ -3,6 +3,7 @@
 
 import copy
 import random
+import os
 
 cp = copy.deepcopy
 random.seed(114514)
@@ -394,7 +395,7 @@ class CharacterData:
         elif SETN != 1:
             self.multi_target_desc = "技能打%.2f" % SETN
 
-    def simulate(self, defense, magic_resistance):
+    def simulate(self, simulate_time, defense, magic_resistance):
         damage_node = list()
         N = self.NormalData
         S = self.SkillData
@@ -417,7 +418,7 @@ class CharacterData:
         dot_interval = 0
         dot_dmg = 0
 
-        while frame < 300 * 30:
+        while frame < simulate_time * 30:
             frame += 1
             atk_cooldown -= 1
             skill_remain -= 1
@@ -499,7 +500,7 @@ class ArmorBreaker(CharacterData):
         self.skill_break_flag = False
         self.both_break_flag = False
 
-    def simulate(self, defense, magic_resistance):
+    def simulate(self, simulate_time, defense, magic_resistance):
         self.BrokenNormalData.enemy_defense_decrease_ratio = self.enemy_def_decrease_ratio
         self.BrokenNormalData.enemy_defense_decrease_value = self.enemy_def_decrease_value
         self.BrokenSkillData.enemy_magic_resistance_decrease_ratio = self.enemy_def_decrease_ratio
@@ -532,7 +533,7 @@ class ArmorBreaker(CharacterData):
 
         def_decrease_remain = 0
 
-        while frame < 300 * 30:
+        while frame < simulate_time * 30:
             frame += 1
             atk_cooldown -= 1
             skill_remain -= 1
@@ -635,7 +636,7 @@ class TalentAtkBuff(CharacterData):
         self.normal_trig_prob = 0
         self.skill_trig_prob = 0
 
-    def simulate(self, defense, magic_resistance):
+    def simulate(self, simulate_time, defense, magic_resistance):
         damage_node = list()
         N, TN = self.NormalData, self.TalentNormalData
         S, TS = self.SkillData, self.TalentSkillData
@@ -660,7 +661,7 @@ class TalentAtkBuff(CharacterData):
         dot_interval = 0
         dot_dmg = 0
 
-        while frame < 300 * 30:
+        while frame < simulate_time * 30:
             frame += 1
             atk_cooldown -= 1
             skill_remain -= 1
@@ -730,7 +731,7 @@ class Astesia(CharacterData):
         self.atk_speed_up_interval = 0
         self.maximum_stage = 0
 
-    def simulate(self, defense, magic_resistance):
+    def simulate(self, simulate_time, defense, magic_resistance):
         atk_spd_interval = self.atk_speed_up_interval * 30
         atk_spd_cnt = 0
 
@@ -756,7 +757,7 @@ class Astesia(CharacterData):
         dot_interval = 0
         dot_dmg = 0
 
-        while frame < 300 * 30:
+        while frame < simulate_time * 30:
             frame += 1
             atk_cooldown -= 1
             skill_remain -= 1
@@ -834,7 +835,7 @@ class Blaze(CharacterData):
         self.skill_gradual_target_num = 1.0
         self.skill_final_target_num = 1.0
 
-    def simulate(self, defense, magic_resistance):
+    def simulate(self, simulate_time, defense, magic_resistance):
         damage_node = list()
         N = self.NormalData
         S = self.SkillData
@@ -857,7 +858,7 @@ class Blaze(CharacterData):
         dot_interval = 0
         dot_dmg = 0
 
-        while frame < 300 * 30:
+        while frame < simulate_time * 30:
             frame += 1
             atk_cooldown -= 1
             skill_remain -= 1
@@ -942,7 +943,7 @@ class Chen(CharacterData):
         self.sp_recovery_per_round = 0
         self.sp_recovery_interval = 0
 
-    def simulate(self, defense, magic_resistance):
+    def simulate(self, simulate_time, defense, magic_resistance):
         damage_node = list()
         N = self.NormalData
         S = self.SkillData
@@ -967,7 +968,7 @@ class Chen(CharacterData):
 
         charge_interval = self.sp_recovery_interval * 30
 
-        while frame < 300 * 30:
+        while frame < simulate_time * 30:
             frame += 1
             atk_cooldown -= 1
             skill_remain -= 1
@@ -1042,7 +1043,7 @@ class Haze(CharacterData):
         self.mr_reduction_ratio = 0
         self.mr_reduction_duration = 0
 
-    def simulate(self, defense, magic_resistance):
+    def simulate(self, simulate_time, defense, magic_resistance):
         self.TalentNormalData.enemy_magic_resistance_decrease_ratio = self.mr_reduction_ratio
         self.TalentSkillData.enemy_magic_resistance_decrease_ratio = self.mr_reduction_ratio
         damage_node = list()
@@ -1073,7 +1074,7 @@ class Haze(CharacterData):
 
         mr_reduction = 0
 
-        while frame < 300 * 30:
+        while frame < simulate_time * 30:
             frame += 1
             atk_cooldown -= 1
             skill_remain -= 1
@@ -1164,7 +1165,7 @@ class Amiya(CharacterData):
         self.sp_recovery_by_atk = 0
         self.sp_recovery_by_kill = 0
 
-    def simulate(self, defense, magic_resistance):
+    def simulate(self, simulate_time, defense, magic_resistance):
         damage_node = list()
         N = self.NormalData
         S = self.SkillData
@@ -1187,7 +1188,7 @@ class Amiya(CharacterData):
         dot_interval = 0
         dot_dmg = 0
 
-        while frame < 300 * 30:
+        while frame < simulate_time * 30:
             frame += 1
             atk_cooldown -= 1
             skill_remain -= 1
@@ -1263,7 +1264,7 @@ class Eyjafjalla(CharacterData):
         self.skill_release_cnt = 0
         self.multi_target_num = 1.0
 
-    def simulate(self, defense, magic_resistance):
+    def simulate(self, simulate_time, defense, magic_resistance):
         self.TalentNormalData.enemy_magic_resistance_decrease_ratio = self.mr_reduction_ratio
         self.TalentSkillData.enemy_magic_resistance_decrease_ratio = self.mr_reduction_ratio
         damage_node = list()
@@ -1300,7 +1301,7 @@ class Eyjafjalla(CharacterData):
 
         mr_reduction = 0
 
-        while frame < 300 * 30:
+        while frame < simulate_time * 30:
             frame += 1
             atk_cooldown -= 1
             skill_remain -= 1
@@ -1405,7 +1406,7 @@ class Ifrit(CharacterData):
         self.sp_recovery_per_round = 0
         self.sp_recovery_interval = 0
 
-    def simulate(self, defense, magic_resistance):
+    def simulate(self, simulate_time, defense, magic_resistance):
         damage_node = list()
         N = self.NormalData
         S = self.SkillData
@@ -1430,7 +1431,7 @@ class Ifrit(CharacterData):
 
         charge_interval = self.sp_recovery_interval * 30
 
-        while frame < 300 * 30:
+        while frame < simulate_time * 30:
             frame += 1
             atk_cooldown -= 1
             skill_remain -= 1
@@ -1508,7 +1509,7 @@ class BluePoison(CharacterData):
         self.other_target_dot_duration = 0
         self.other_target_dot_damage = 0
 
-    def simulate(self, defense, magic_resistance):
+    def simulate(self, simulate_time, defense, magic_resistance):
         damage_node = list()
         N = self.NormalData
         S = self.SkillData
@@ -1537,7 +1538,7 @@ class BluePoison(CharacterData):
         oth_dot_interval = 0
         oth_dot_dmg = 0
 
-        while frame < 300 * 30:
+        while frame < simulate_time * 30:
             frame += 1
             atk_cooldown -= 1
             skill_remain -= 1
@@ -1631,7 +1632,7 @@ class Platinum(CharacterData):
         else:
             return ((atk_interval_frame - minAF) * maxAS + (maxAF - atk_interval_frame) * minAS) / (maxAF - minAF)
 
-    def simulate(self, defense, magic_resistance):
+    def simulate(self, simulate_time, defense, magic_resistance):
         damage_node = list()
         N = self.NormalData
         S = self.SkillData
@@ -1656,7 +1657,7 @@ class Platinum(CharacterData):
 
         atk_interval_frame = 0
 
-        while frame < 300 * 30:
+        while frame < simulate_time * 30:
             frame += 1
             atk_cooldown -= 1
             skill_remain -= 1
@@ -1734,7 +1735,7 @@ class Meteorite(ArmorBreaker):
         self.atk_up_prob = 0
         self.atk_up_ratio = 0.0
 
-    def simulate(self, defense, magic_resistance):
+    def simulate(self, simulate_time, defense, magic_resistance):
         self.BrokenNormalData.enemy_defense_decrease_ratio = self.enemy_def_decrease_ratio
         self.BrokenNormalData.enemy_defense_decrease_value = self.enemy_def_decrease_value
         self.BrokenSkillData.enemy_magic_resistance_decrease_ratio = self.enemy_def_decrease_ratio
@@ -1767,7 +1768,7 @@ class Meteorite(ArmorBreaker):
 
         def_decrease_remain = 0
 
-        while frame < 300 * 30:
+        while frame < simulate_time * 30:
             frame += 1
             atk_cooldown -= 1
             skill_remain -= 1
@@ -1875,111 +1876,6 @@ class Meteorite(ArmorBreaker):
         return damage_node
 
 
-class Provence(CharacterData):
-    def __init__(self, name, skill_order, basic_info_dict, normal_info_dict, skill_info_dict):
-        CharacterData.__init__(self, name, skill_order, basic_info_dict, normal_info_dict, skill_info_dict)
-        self.TalentNormalData = StateData(normal_info_dict, dmg_type=self.normal_damage_type, is_skill_state=False)
-        self.TalentSkillData = StateData(skill_info_dict, dmg_type=self.skill_damage_type, is_skill_state=True)
-        self.talent_atk_scale = 0
-        self.talent_prob = 0
-
-    def simulate(self, defense, magic_resistance):
-        self.TalentNormalData.atk_scale *= self.talent_atk_scale
-        self.TalentSkillData.atk_scale *= self.talent_atk_scale
-        damage_node = list()
-        N = self.NormalData
-        TN = self.TalentNormalData
-        S = self.SkillData
-        TS = self.TalentSkillData
-        N.save_temp(defense, magic_resistance)
-        TN.save_temp(defense, magic_resistance)
-        S.save_temp(defense, magic_resistance)
-        TS.save_temp(defense, magic_resistance)
-
-        curr_sp = self.init_sp * 30
-        sp_cost = self.sp_cost * 30
-
-        atk_cooldown = 0
-        skill_remain = 0
-        sp_recovery_block = 0
-
-        frame = 0
-        damage = 0
-        stun = 0
-        skill = False
-
-        dot_remain = 0
-        dot_interval = 0
-        dot_dmg = 0
-
-        mr_reduction = 0
-
-        while frame < 300 * 30:
-            frame += 1
-            atk_cooldown -= 1
-            skill_remain -= 1
-            sp_recovery_block -= 1
-            mr_reduction -= 1
-
-            if dot_dmg > 0 and dot_remain > 0:
-                dot_remain -= 1
-                dot_interval -= 1
-                if dot_interval <= 0:
-                    damage += dot_dmg
-                    damage_node.append((frame / 30, damage))
-                    dot_interval = 30
-
-            if sp_recovery_block <= 0 and self.sp_type == "auto":
-                curr_sp += self.sp_recovery
-
-            if stun > 0:
-                stun -= 1
-                continue
-
-            if skill_remain < 0 and skill:
-                skill = False
-                if self.skill_reset_cooldown_flag:
-                    atk_cooldown = 5
-                stun = S.stun * 30
-
-            if curr_sp >= sp_cost:
-                skill_remain = self.skill_duration * 30
-                skill = True
-                sp_recovery_block = self.sp_recovery_block_time * 30
-                curr_sp = 0.0
-                if self.skill_reset_cooldown_flag:
-                    atk_cooldown = 5
-
-            if atk_cooldown <= 0:
-                if skill:
-                    damage += (S.damage * S.atk_times * S.equivalent_target_num * (1 - self.talent_prob) +
-                               TS.damage * TS.atk_times * TS.equivalent_target_num * self.talent_prob)
-                    atk_cooldown = S.frame
-                    if S.dot_damage > 0:
-                        if dot_remain > 0:
-                            dot_remain = S.dot_frame
-                        else:
-                            dot_dmg = S.dot_damage
-                            dot_remain = S.dot_frame
-                else:
-                    damage += (N.damage * N.atk_times * N.equivalent_target_num * (1 - self.talent_prob) +
-                               TN.damage * TN.atk_times * TN.equivalent_target_num * self.talent_prob)
-                    atk_cooldown = N.frame
-                    if N.dot_damage > 0:
-                        if dot_remain > 0:
-                            dot_remain = N.dot_frame
-                        else:
-                            dot_dmg = N.dot_damage
-                            dot_remain = N.dot_frame
-
-                if sp_recovery_block <= 0 and self.sp_type == "attack":
-                    curr_sp += 30
-
-                damage_node.append((frame / 30, damage))
-
-        return damage_node
-
-
 class Schwarz(CharacterData):
     def __init__(self, name, skill_order, basic_info_dict, normal_info_dict, skill_info_dict):
         CharacterData.__init__(self, name, skill_order, basic_info_dict, normal_info_dict, skill_info_dict)
@@ -1996,96 +1892,110 @@ class Schwarz(CharacterData):
         self.skill_talent_prob = 0
         self.atk_type_dict = dict()
 
-    def get_state_propotion_by_simulation(self, simulation_times=1000):
-        state_list = [self.NormalData, self.TalentNormalData, self.BreakNormalData, self.TalentNormalData,
-                      self.SkillData, self.TalentSkillData, self.BreakSkillData, self.TalentSkillData]
-        frame_list = map(lambda x: x.real_atk_frame(), state_list)
-        N, TN, BN, TBN, S, TS, BS, TBS = frame_list
-        type_dict = {
-            "normal_no_break_no_talent": 0,
-            "skill_no_break_no_talent": 0,
-            "normal_break_no_talent": 0,
-            "skill_break_no_talent": 0,
-            "normal_break_talent": 0,
-            "skill_break_talent": 0,
-        }
-        skill_atk_cnt = 0
-        normal_atk_cnt = 0
-        for i in range(simulation_times):
-            curr_sp = self.init_sp * 30
-            sp_cost = self.sp_cost * 30
-            atk_cooldown = 0
-            skill_remain = 0
-            sp_recovery_block = 0
-            frame = 0
-            skill = False
-            def_decrease_remain = 0
+    def get_state_propotion_by_simulation(self, simulate_time, simulation_times=1000):
+        temp_path = "data/Schwartz_temp_skill%s_%.0f%%_%.0f%%_%ssec_%.0fsimulations.txt" % \
+                    (self.skill_order, self.talent_prob * 100, self.skill_talent_prob * 100,
+                     simulate_time, simulation_times)
+        if os.path.exists(temp_path):
+            f = open(temp_path, "r", encoding="utf-8")
+            type_dict_str = f.read().strip()
+            type_dict = eval(type_dict_str)
+            f.close()
+        else:
+            state_list = [self.NormalData, self.TalentNormalData, self.BreakNormalData, self.TalentNormalData,
+                          self.SkillData, self.TalentSkillData, self.BreakSkillData, self.TalentSkillData]
+            frame_list = map(lambda x: x.real_atk_frame(), state_list)
+            N, TN, BN, TBN, S, TS, BS, TBS = frame_list
+            type_dict = {
+                "normal_no_break_no_talent": 0,
+                "skill_no_break_no_talent": 0,
+                "normal_break_no_talent": 0,
+                "skill_break_no_talent": 0,
+                "normal_break_talent": 0,
+                "skill_break_talent": 0,
+            }
+            skill_atk_cnt = 0
+            normal_atk_cnt = 0
+            for i in range(simulation_times):
+                curr_sp = self.init_sp * 30
+                sp_cost = self.sp_cost * 30
+                atk_cooldown = 0
+                skill_remain = 0
+                sp_recovery_block = 0
+                frame = 0
+                skill = False
+                def_decrease_remain = 0
 
-            while frame < 300 * 30:
-                frame += 1
-                atk_cooldown -= 1
-                skill_remain -= 1
-                sp_recovery_block -= 1
-                def_decrease_remain -= 1
+                while frame < simulate_time * 30:
+                    frame += 1
+                    atk_cooldown -= 1
+                    skill_remain -= 1
+                    sp_recovery_block -= 1
+                    def_decrease_remain -= 1
 
-                if sp_recovery_block <= 0 and self.sp_type == "auto":
-                    curr_sp += self.sp_recovery
-                if skill_remain < 0 and skill:
-                    skill = False
-                    if self.skill_reset_cooldown_flag:
-                        atk_cooldown = 5
-                if curr_sp >= sp_cost:
-                    skill_remain = self.skill_duration * 30
-                    skill = True
-                    sp_recovery_block = self.sp_recovery_block_time * 30
-                    curr_sp = 0.0
-                    if self.skill_reset_cooldown_flag:
-                        atk_cooldown = 5
+                    if sp_recovery_block <= 0 and self.sp_type == "auto":
+                        curr_sp += self.sp_recovery
+                    if skill_remain < 0 and skill:
+                        skill = False
+                        if self.skill_reset_cooldown_flag:
+                            atk_cooldown = 5
+                    if curr_sp >= sp_cost:
+                        skill_remain = self.skill_duration * 30
+                        skill = True
+                        sp_recovery_block = self.sp_recovery_block_time * 30
+                        curr_sp = 0.0
+                        if self.skill_reset_cooldown_flag:
+                            atk_cooldown = 5
 
-                if atk_cooldown <= 0:
-                    roll = random.random()
-                    if skill:
-                        skill_atk_cnt += 1
-                        atk_cooldown = S
-                        if roll < self.skill_talent_prob:
-                            type_dict["skill_break_talent"] += 1
-                            def_decrease_remain = self.enemy_def_decrease_duration
-                        else:
-                            if def_decrease_remain > 0:
-                                type_dict["skill_break_no_talent"] += 1
+                    if atk_cooldown <= 0:
+                        roll = random.random()
+                        if skill:
+                            skill_atk_cnt += 1
+                            atk_cooldown = S
+                            if roll < self.skill_talent_prob:
+                                type_dict["skill_break_talent"] += 1
+                                def_decrease_remain = self.enemy_def_decrease_duration * 30
                             else:
-                                type_dict["skill_no_break_no_talent"] += 1
-                    else:
-                        normal_atk_cnt += 1
-                        atk_cooldown = N
-                        if roll < self.talent_prob:
-                            type_dict["normal_break_talent"] += 1
-                            def_decrease_remain = self.enemy_def_decrease_duration
+                                if def_decrease_remain > 0:
+                                    type_dict["skill_break_no_talent"] += 1
+                                else:
+                                    type_dict["skill_no_break_no_talent"] += 1
                         else:
-                            if def_decrease_remain > 0:
-                                type_dict["normal_break_no_talent"] += 1
+                            normal_atk_cnt += 1
+                            atk_cooldown = N
+                            if roll < self.talent_prob:
+                                type_dict["normal_break_talent"] += 1
+                                def_decrease_remain = self.enemy_def_decrease_duration * 30
                             else:
-                                type_dict["normal_no_break_no_talent"] += 1
-                    if sp_recovery_block <= 0 and self.sp_type == "attack":
-                        curr_sp += 30
+                                if def_decrease_remain > 0:
+                                    type_dict["normal_break_no_talent"] += 1
+                                else:
+                                    type_dict["normal_no_break_no_talent"] += 1
+                        if sp_recovery_block <= 0 and self.sp_type == "attack":
+                            curr_sp += 30
 
-        # print(self.talent_prob, self.skill_talent_prob, simulation_times)
-        type_dict["normal_no_break_no_talent"] /= normal_atk_cnt
-        type_dict["normal_break_no_talent"] /= normal_atk_cnt
-        type_dict["normal_break_talent"] /= normal_atk_cnt
-        type_dict["skill_no_break_no_talent"] /= skill_atk_cnt
-        type_dict["skill_break_no_talent"] /= skill_atk_cnt
-        type_dict["skill_break_talent"] /= skill_atk_cnt
+            # print(self.talent_prob, self.skill_talent_prob, simulation_times)
+            type_dict["normal_no_break_no_talent"] /= normal_atk_cnt
+            type_dict["normal_break_no_talent"] /= normal_atk_cnt
+            type_dict["normal_break_talent"] /= normal_atk_cnt
+            type_dict["skill_no_break_no_talent"] /= skill_atk_cnt
+            type_dict["skill_break_no_talent"] /= skill_atk_cnt
+            type_dict["skill_break_talent"] /= skill_atk_cnt
 
-        for k, v in type_dict.items():
-            print("%s: %.2f%%;" % (k, type_dict[k] * 100), end=" ")
-        print()
+            print("Writing Schwarz's simulation result:")
+            f = open(temp_path, "w", encoding="utf-8")
+            f.write(str(type_dict))
+            f.close()
+            for k, v in type_dict.items():
+                print("\t%s: %.2f%%;" % (k, type_dict[k] * 100))
+            print()
+
         self.atk_type_dict = cp(type_dict)
         return type_dict
 
-    def simulate(self, defense, magic_resistance, simulation_times=1000):
+    def simulate(self, simulate_time, defense, magic_resistance):
         if len(self.atk_type_dict.keys()) == 0:
-            self.get_state_propotion_by_simulation(simulation_times)
+            self.get_state_propotion_by_simulation(simulate_time, simulation_times=1000)
 
         state_list = [self.NormalData, self.TalentNormalData, self.BreakNormalData, self.TalentNormalData,
                       self.SkillData, self.TalentSkillData, self.BreakSkillData, self.TalentSkillData]
@@ -2121,7 +2031,7 @@ class Schwarz(CharacterData):
 
         def_decrease_remain = 0
 
-        while frame < 300 * 30:
+        while frame < simulate_time * 30:
             frame += 1
             atk_cooldown -= 1
             skill_remain -= 1
@@ -2185,7 +2095,7 @@ class Manticore(CharacterData):
         self.atk_buff_interval = 0
         self.atk_buff_value = 0
 
-    def simulate(self, defense, magic_resistance):
+    def simulate(self, simulate_time, defense, magic_resistance):
         damage_node = list()
         N, TN = self.NormalData, self.TalentNormalData
         S, TS = self.SkillData, self.TalentSkillData
@@ -2214,7 +2124,7 @@ class Manticore(CharacterData):
 
         talent_frame = self.atk_buff_interval * 30
 
-        while frame < 300 * 30:
+        while frame < simulate_time * 30:
             frame += 1
             atk_cooldown -= 1
             skill_remain -= 1
@@ -3284,56 +3194,56 @@ def modify_data(f, stage, multi_target=False):
         elif name == "普罗旺斯" and skill_order == "1":
             # Not attacking enemy in the right frontal grid
             B, N, S = load_data(row)
-            tmp = Provence(name, skill_order, basic_info_dict=B, normal_info_dict=N, skill_info_dict=S)
+            tmp = TalentAtkBuff(name, skill_order, basic_info_dict=B, normal_info_dict=N, skill_info_dict=S)
             tmp.passive_skill()
             tmp.NormalData.atk_scale /= eval(row["Talent Dict"]).get('atk_scale', 1.0)
             tmp.SkillData.atk_scale /= eval(row["Talent Dict"]).get('atk_scale', 1.0)
-            tmp.TalentNormalData.atk_scale /= eval(row["Talent Dict"]).get('atk_scale', 1.0)
-            tmp.TalentSkillData.atk_scale /= eval(row["Talent Dict"]).get('atk_scale', 1.0)
-            tmp.talent_atk_scale = eval(row["Talent Dict"]).get('atk_scale', 1.0)
-            tmp.talent_prob = eval(row["Talent Dict"]).get('prob', 0.0)
-            Provence_Wolfeye_atk_scale = (1 - Provence_Wolfeye_target_hp_ratio) / eval(row["Skill Dict"]).get(
+            tmp.TalentNormalData.atk_scale *= eval(row["Talent Dict"]).get('atk_scale', 1.0)
+            tmp.TalentSkillData.atk_scale *= eval(row["Talent Dict"]).get('atk_scale', 1.0)
+            tmp.normal_trig_prob = eval(row["Talent Dict"]).get('prob', 0.0)
+            tmp.skill_trig_prob = eval(row["Talent Dict"]).get('prob', 0.0)
+            provence_wolfeye_atk_scale = (1 - Provence_Wolfeye_target_hp_ratio) / eval(row["Skill Dict"]).get(
                 'hp_ratio_drop', 1.0) * eval(row["Skill Dict"]).get('atk_scale_up', 0.0) + 1.0
-            tmp.SkillData.atk_scale *= Provence_Wolfeye_atk_scale
-            tmp.TalentSkillData.atk_scale *= Provence_Wolfeye_atk_scale
+            tmp.SkillData.atk_scale *= provence_wolfeye_atk_scale
+            tmp.TalentSkillData.atk_scale *= provence_wolfeye_atk_scale
             char_dict[key] = tmp
             # Attacking enemy in the right frontal grid
             key = "%s-%s-%s技能" % (stage, "普罗旺斯(正前方一格)", skill_order)
             B, N, S = load_data(row)
-            tmp = Provence("普罗旺斯(正前方一格)", skill_order, basic_info_dict=B, normal_info_dict=N, skill_info_dict=S)
+            tmp = TalentAtkBuff("普罗旺斯(正前方一格)", skill_order, basic_info_dict=B, normal_info_dict=N, skill_info_dict=S)
             tmp.passive_skill()
             tmp.NormalData.atk_scale /= eval(row["Talent Dict"]).get('atk_scale', 1.0)
             tmp.SkillData.atk_scale /= eval(row["Talent Dict"]).get('atk_scale', 1.0)
-            tmp.TalentNormalData.atk_scale /= eval(row["Talent Dict"]).get('atk_scale', 1.0)
-            tmp.TalentSkillData.atk_scale /= eval(row["Talent Dict"]).get('atk_scale', 1.0)
-            tmp.talent_atk_scale = eval(row["Talent Dict"]).get('atk_scale', 1.0)
-            tmp.talent_prob = eval(row["Talent Dict"]).get('prob2', 0.0)
-            Provence_Wolfeye_atk_scale = (1 - Provence_Wolfeye_target_hp_ratio) / eval(row["Skill Dict"]).get(
+            tmp.TalentNormalData.atk_scale *= eval(row["Talent Dict"]).get('atk_scale', 1.0)
+            tmp.TalentSkillData.atk_scale *= eval(row["Talent Dict"]).get('atk_scale', 1.0)
+            tmp.normal_trig_prob = eval(row["Talent Dict"]).get('prob2', 0.0)
+            tmp.skill_trig_prob = eval(row["Talent Dict"]).get('prob2', 0.0)
+            provence_wolfeye_atk_scale = (1 - Provence_Wolfeye_target_hp_ratio) / eval(row["Skill Dict"]).get(
                 'hp_ratio_drop', 1.0) * eval(row["Skill Dict"]).get('atk_scale_up', 0.0) + 1.0
-            tmp.SkillData.atk_scale *= Provence_Wolfeye_atk_scale
-            tmp.TalentSkillData.atk_scale *= Provence_Wolfeye_atk_scale
+            tmp.SkillData.atk_scale *= provence_wolfeye_atk_scale
+            tmp.TalentSkillData.atk_scale *= provence_wolfeye_atk_scale
             char_dict[key] = tmp
         elif name == "普罗旺斯" and skill_order == "2":
             # Not attacking enemy in the right frontal grid
             B, N, S = load_data(row)
-            tmp = Provence(name, skill_order, basic_info_dict=B, normal_info_dict=N, skill_info_dict=S)
+            tmp = TalentAtkBuff(name, skill_order, basic_info_dict=B, normal_info_dict=N, skill_info_dict=S)
             tmp.NormalData.atk_scale /= eval(row["Talent Dict"]).get('atk_scale', 1.0)
             tmp.SkillData.atk_scale /= eval(row["Talent Dict"]).get('atk_scale', 1.0)
-            tmp.TalentNormalData.atk_scale /= eval(row["Talent Dict"]).get('atk_scale', 1.0)
-            tmp.TalentSkillData.atk_scale /= eval(row["Talent Dict"]).get('atk_scale', 1.0)
-            tmp.talent_atk_scale = eval(row["Talent Dict"]).get('atk_scale', 1.0)
-            tmp.talent_prob = eval(row["Talent Dict"]).get('prob', 0.0)
+            tmp.TalentNormalData.atk_scale *= eval(row["Talent Dict"]).get('atk_scale', 1.0)
+            tmp.TalentSkillData.atk_scale *= eval(row["Talent Dict"]).get('atk_scale', 1.0)
+            tmp.normal_trig_prob = eval(row["Talent Dict"]).get('prob', 0.0)
+            tmp.skill_trig_prob = eval(row["Talent Dict"]).get('prob', 0.0)
             char_dict[key] = tmp
             # Attacking enemy in the right frontal grid
             key = "%s-%s-%s技能" % (stage, "普罗旺斯(正前方一格)", skill_order)
             B, N, S = load_data(row)
-            tmp = Provence("普罗旺斯(正前方一格)", skill_order, basic_info_dict=B, normal_info_dict=N, skill_info_dict=S)
+            tmp = TalentAtkBuff("普罗旺斯(正前方一格)", skill_order, basic_info_dict=B, normal_info_dict=N, skill_info_dict=S)
             tmp.NormalData.atk_scale /= eval(row["Talent Dict"]).get('atk_scale', 1.0)
             tmp.SkillData.atk_scale /= eval(row["Talent Dict"]).get('atk_scale', 1.0)
-            tmp.TalentNormalData.atk_scale /= eval(row["Talent Dict"]).get('atk_scale', 1.0)
-            tmp.TalentSkillData.atk_scale /= eval(row["Talent Dict"]).get('atk_scale', 1.0)
-            tmp.talent_atk_scale = eval(row["Talent Dict"]).get('atk_scale', 1.0)
-            tmp.talent_prob = eval(row["Talent Dict"]).get('prob2', 0.0)
+            tmp.TalentNormalData.atk_scale *= eval(row["Talent Dict"]).get('atk_scale', 1.0)
+            tmp.TalentSkillData.atk_scale *= eval(row["Talent Dict"]).get('atk_scale', 1.0)
+            tmp.normal_trig_prob = eval(row["Talent Dict"]).get('prob2', 0.0)
+            tmp.skill_trig_prob = eval(row["Talent Dict"]).get('prob2', 0.0)
             char_dict[key] = tmp
 
         elif name == "黑" and skill_order == "1":
