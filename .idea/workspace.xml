@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="041d2463-34fb-4781-8c9a-f7abf3010a82" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/plot.py" beforeDir="false" afterPath="$PROJECT_DIR$/plot.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -12,7 +12,7 @@
   </component>
   <component name="CoverageDataManager">
     <SUITE FILE_PATH="coverage/ArknightsDamageCurve$ArkDmgCurve.coverage" NAME="ArkDmgCurve Coverage Results" MODIFIED="1582508460320" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/ArknightsDamageCurve$plot.coverage" NAME="plot Coverage Results" MODIFIED="1582516583605" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/ArknightsDamageCurve$plot.coverage" NAME="plot Coverage Results" MODIFIED="1582517098440" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
   <component name="FUSProjectUsageTrigger">
     <session id="2107035149">
@@ -29,12 +29,12 @@
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
           <entry key="Python Console" value="42" />
-          <entry key="py" value="1748" />
+          <entry key="py" value="1783" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="Python" value="1790" />
+          <entry key="Python" value="1825" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
@@ -67,8 +67,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/plot.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="383">
-              <caret line="61" column="27" selection-start-line="61" selection-start-column="27" selection-end-line="61" selection-end-column="27" />
+            <state relative-caret-position="203">
+              <caret line="673" column="46" selection-start-line="673" selection-start-column="46" selection-end-line="673" selection-end-column="46" />
               <folding>
                 <element signature="n#!!doc" />
                 <element signature="e#216#273#0" />
@@ -118,9 +118,7 @@
                 <element signature="e#19937#20715#1" />
                 <element signature="e#21027#21554#0" />
                 <element signature="e#21735#26313#1" />
-                <element signature="e#26572#26812#0" />
                 <element signature="e#26831#27083#0" />
-                <element signature="e#28349#30672#0" />
                 <element signature="e#28366#28488#0" />
                 <element signature="e#28502#28619#0" />
                 <element signature="e#28636#28773#0" />
@@ -130,7 +128,6 @@
                 <element signature="e#29312#29462#0" />
                 <element signature="e#29478#29631#0" />
                 <element signature="e#29647#29794#0" />
-                <element signature="e#29817#29958#0" />
                 <element signature="e#29978#30130#0" />
                 <element signature="e#30154#30318#0" />
                 <element signature="e#30339#30480#0" />
@@ -384,8 +381,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/plot.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="383">
-          <caret line="61" column="27" selection-start-line="61" selection-start-column="27" selection-end-line="61" selection-end-column="27" />
+        <state relative-caret-position="203">
+          <caret line="673" column="46" selection-start-line="673" selection-start-column="46" selection-end-line="673" selection-end-column="46" />
           <folding>
             <element signature="n#!!doc" />
             <element signature="e#216#273#0" />
@@ -435,9 +432,7 @@
             <element signature="e#19937#20715#1" />
             <element signature="e#21027#21554#0" />
             <element signature="e#21735#26313#1" />
-            <element signature="e#26572#26812#0" />
             <element signature="e#26831#27083#0" />
-            <element signature="e#28349#30672#0" />
             <element signature="e#28366#28488#0" />
             <element signature="e#28502#28619#0" />
             <element signature="e#28636#28773#0" />
@@ -447,7 +442,6 @@
             <element signature="e#29312#29462#0" />
             <element signature="e#29478#29631#0" />
             <element signature="e#29647#29794#0" />
-            <element signature="e#29817#29958#0" />
             <element signature="e#29978#30130#0" />
             <element signature="e#30154#30318#0" />
             <element signature="e#30339#30480#0" />
