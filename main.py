@@ -17,7 +17,7 @@ if __name__ == "__main__":
             ShowSlayLine = Pick.get("ShowSlayLine", True)
             MultiTarget = Pick.get("MultiTarget", True)
             IgnorePolish = Pick.get("IgnorePolish", False)
-            SimulateTime = 120
+            SimulateTime = 300
 
             plot.plot(Stage, PickList, PickListName, Baseline, Enemy, simulate_time=SimulateTime,
                       show_slay_line=ShowSlayLine, multi_target=MultiTarget, ignore_polish=IgnorePolish)
