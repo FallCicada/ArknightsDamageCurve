@@ -2248,6 +2248,7 @@ def load_data(row):
     skill_info_dict["atk"] += float(skill.get("atk", 0.0))
     skill_info_dict["attack_speed"] += float(skill.get("attack_speed", 0))
     skill_info_dict["atk_scale"] *= float(skill.get("atk_scale", 1.0))
+    skill_info_dict["atk_scale"] *= float(skill.get("damage_scale", 1.0))
     skill_info_dict["base_attack_time_add"] += float(skill.get("base_attack_time", 0))
 
     return basic_info_dict, normal_info_dict, skill_info_dict
