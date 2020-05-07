@@ -144,6 +144,63 @@ enemy_dict = {
         "rank": "Elite.png",
         "tag": ["2级血.png"]
     },
+
+    "大亚当": {
+        "HP": 30000,
+        "def": 1000,
+        "MR": 30,
+        "img": "大亚当.png",
+        "rank": "Boss.png",
+        "tag": []
+    },
+    "游击队盾卫组长": {
+        "HP": 67500,
+        "def": 1500,
+        "MR": 60,
+        "img": "游击队盾卫组长.png",
+        "rank": "Elite.png",
+        "tag": ["3级血"]
+    },
+    "萨卡兹恶咒者": {
+        "HP": 55000,
+        "def": 300,
+        "MR": 50,
+        "img": "萨卡兹恶咒者.png",
+        "rank": "Elite.png",
+        "tag": ["3级血"]
+    },
+    "爆破攻坚手组长": {
+        "HP": 67500,
+        "def": 1000,
+        "MR": 0,
+        "img": "爆破攻坚手组长.png",
+        "rank": "Elite.png",
+        "tag": ["3级血"]
+    },
+    "游击队萨卡兹战士组长": {
+        "HP": 30000,
+        "def": 400,
+        "MR": 50,
+        "img": "游击队萨卡兹战士组长.png",
+        "rank": "Elite.png",
+        "tag": ["3级血"]
+    },
+    "爱国者(行军模式)": {
+        "HP": 45000,
+        "def": 2100,
+        "MR": 90,
+        "img": "爱国者.png",
+        "rank": "Boss.png",
+        "tag": []
+    },
+    "爱国者(毁灭模式)": {
+        "HP": 45000,
+        "def": 700,
+        "MR": 45,
+        "img": "爱国者.png",
+        "rank": "Boss.png",
+        "tag": []
+    },
 }
 
 # Multi target -- Target num dict

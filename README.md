@@ -179,9 +179,9 @@
 2. <font color=brown>**More usages:**</font> To generate customized damage curve, you need to:
 	* Change parameters in `plot.py`. There are some preset parameters in `plot.py`
 	* You can see more description of those parameters in the comment of `plot.plot(...)`
-	  
+	
 3. More descriptions will be added in the future
-  
+
 
 <span id="附录-中文"></span>
 ## 附录

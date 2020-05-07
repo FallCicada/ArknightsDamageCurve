@@ -702,9 +702,9 @@ if __name__ == "__main__":
     # TODO: You can set your parameters below
     Stage = "29010"
     Pick = DefaultPickList["New_20_05_01"]
-    # Enemy = "伐木老手"
+    Enemy = "伐木老手"
     # Enemy = "梅菲斯特"
-    Enemy = "雪怪小队破冰者"
+    # Enemy = "雪怪小队破冰者"
     # Enemy = "重装五十夫长"
     # Enemy = "复仇者"
 
@@ -713,7 +713,7 @@ if __name__ == "__main__":
     PickListName = Pick["PickListName"]
     Baseline = Pick["Baseline"]
     ShowSlayLine = Pick.get("ShowSlayLine", True)
-    MultiTarget = Pick.get("MultiTarget", False)
+    MultiTarget = Pick.get("MultiTarget", True)
     IgnorePolish = Pick.get("IgnorePolish", False)
     SimulationTime = 300
     # End Params

@@ -2,15 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="041d2463-34fb-4781-8c9a-f7abf3010a82" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/character.py" beforeDir="false" afterPath="$PROJECT_DIR$/character.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/plot.py" beforeDir="false" afterPath="$PROJECT_DIR$/plot.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/prepare.py" beforeDir="false" afterPath="$PROJECT_DIR$/prepare.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/raw/RawData.csv" beforeDir="false" afterPath="$PROJECT_DIR$/raw/RawData.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/raw/character_table.json" beforeDir="false" afterPath="$PROJECT_DIR$/raw/character_table.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/raw/skill_table.json" beforeDir="false" afterPath="$PROJECT_DIR$/raw/skill_table.json" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -43,13 +37,13 @@
         <counts>
           <entry key="Python Console" value="42" />
           <entry key="gitignore" value="18" />
-          <entry key="py" value="8590" />
+          <entry key="py" value="8742" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
           <entry key="PLAIN_TEXT" value="18" />
-          <entry key="Python" value="8632" />
+          <entry key="Python" value="8784" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
@@ -73,24 +67,23 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/prepare.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="49">
-              <caret line="22" column="11" selection-start-line="22" selection-start-column="11" selection-end-line="22" selection-end-column="35" />
+            <state relative-caret-position="-22">
+              <caret line="22" column="8" selection-start-line="22" selection-start-column="8" selection-end-line="22" selection-end-column="8" />
             </state>
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/character.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="342">
-              <caret line="857" lean-forward="true" selection-start-line="857" selection-end-line="857" />
+            <state relative-caret-position="601">
+              <caret line="198" column="16" selection-start-line="198" selection-start-column="16" selection-end-line="198" selection-end-column="16" />
               <folding>
                 <element signature="n#!!doc" />
                 <element signature="e#115#187#0" />
                 <element signature="e#322#377#0" />
                 <element signature="e#532#591#0" />
                 <element signature="e#731#743#0" />
-                <element signature="e#821#3265#0" />
                 <element signature="e#835#984#0" />
                 <element signature="e#1000#1151#0" />
                 <element signature="e#1166#1327#0" />
@@ -470,6 +463,7 @@
                 <element signature="e#89837#90042#0" />
                 <element signature="e#89967#90042#0" />
                 <element signature="e#87178#89353#0" />
+                <element signature="e#89407#197705#0" />
                 <element signature="e#89407#90114#1" />
                 <element signature="e#90421#90719#0" />
                 <element signature="e#90782#90948#0" />
@@ -763,6 +757,7 @@
                 <element signature="e#193784#194387#0" />
                 <element signature="e#194449#195052#0" />
                 <element signature="e#195114#195717#0" />
+                <element signature="e#195774#197687#0" />
                 <element signature="e#197689#197707#0" />
                 <element signature="e#197810#197890#0" />
                 <element signature="e#197908#197986#0" />
@@ -770,14 +765,14 @@
                 <element signature="e#198055#198093#0" />
                 <element signature="e#198104#198145#0" />
                 <element signature="e#198222#198261#0" />
-                <marker date="1588857128029" expanded="true" signature="30935:30938" ph="..." />
-                <marker date="1588857128029" expanded="true" signature="95574:95577" ph="..." />
+                <marker date="1588860387781" expanded="true" signature="32068:32071" ph="..." />
+                <marker date="1588860387781" expanded="true" signature="96707:96710" ph="..." />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/.gitignore">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="410">
@@ -789,8 +784,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/plot.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="22">
-              <caret line="689" column="6" lean-forward="true" selection-start-line="689" selection-start-column="6" selection-end-line="689" selection-end-column="6" />
+            <state relative-caret-position="288">
+              <caret line="704" column="4" selection-start-line="704" selection-start-column="4" selection-end-line="704" selection-end-column="4" />
               <folding>
                 <element signature="n#!!doc" />
                 <element signature="e#216#273#0" />
@@ -882,6 +877,7 @@
                 <element signature="e#32124#32296#0" />
                 <element signature="e#32496#32704#0" />
                 <element signature="e#32717#32876#0" />
+                <element signature="e#32907#33075#0" />
                 <element signature="e#32912#32924#0" />
               </folding>
             </state>
@@ -942,10 +938,10 @@
         <option value="$PROJECT_DIR$/detailed_char.py" />
         <option value="$USER_HOME$/Desktop/data/generate_12.py" />
         <option value="$PROJECT_DIR$/draft.py" />
-        <option value="$PROJECT_DIR$/prepare.py" />
-        <option value="$PROJECT_DIR$/character.py" />
-        <option value="$PROJECT_DIR$/plot.py" />
         <option value="$PROJECT_DIR$/.gitignore" />
+        <option value="$PROJECT_DIR$/prepare.py" />
+        <option value="$PROJECT_DIR$/plot.py" />
+        <option value="$PROJECT_DIR$/character.py" />
       </list>
     </option>
   </component>
@@ -1133,7 +1129,7 @@
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.32972974" />
-      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.49948186" visible="true" weight="0.3310811" />
+      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.49948186" weight="0.3310811" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.39919892" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -1142,7 +1138,7 @@
       <window_info anchor="bottom" id="Version Control" order="8" weight="0.32977304" />
       <window_info anchor="bottom" id="Database Changes" order="9" show_stripe_button="false" />
       <window_info anchor="bottom" id="Event Log" order="10" sideWeight="0.50051814" side_tool="true" weight="0.32977304" />
-      <window_info anchor="bottom" id="Terminal" order="11" weight="0.32977304" />
+      <window_info anchor="bottom" id="Terminal" order="11" weight="0.32972974" />
       <window_info anchor="bottom" id="Python Console" order="12" weight="0.32977304" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
@@ -1218,6 +1214,13 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/prepare.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-22">
+          <caret line="22" column="8" selection-start-line="22" selection-start-column="8" selection-end-line="22" selection-end-column="8" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/main.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="30">
@@ -1225,17 +1228,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/prepare.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="49">
-          <caret line="22" column="11" selection-start-line="22" selection-start-column="11" selection-end-line="22" selection-end-column="35" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/plot.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="22">
-          <caret line="689" column="6" lean-forward="true" selection-start-line="689" selection-start-column="6" selection-end-line="689" selection-end-column="6" />
+        <state relative-caret-position="288">
+          <caret line="704" column="4" selection-start-line="704" selection-start-column="4" selection-end-line="704" selection-end-column="4" />
           <folding>
             <element signature="n#!!doc" />
             <element signature="e#216#273#0" />
@@ -1327,22 +1323,29 @@
             <element signature="e#32124#32296#0" />
             <element signature="e#32496#32704#0" />
             <element signature="e#32717#32876#0" />
+            <element signature="e#32907#33075#0" />
             <element signature="e#32912#32924#0" />
           </folding>
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/.gitignore">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="410">
+          <caret line="141" column="8" selection-start-line="141" selection-start-column="8" selection-end-line="141" selection-end-column="8" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/character.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="342">
-          <caret line="857" lean-forward="true" selection-start-line="857" selection-end-line="857" />
+        <state relative-caret-position="601">
+          <caret line="198" column="16" selection-start-line="198" selection-start-column="16" selection-end-line="198" selection-end-column="16" />
           <folding>
             <element signature="n#!!doc" />
             <element signature="e#115#187#0" />
             <element signature="e#322#377#0" />
             <element signature="e#532#591#0" />
             <element signature="e#731#743#0" />
-            <element signature="e#821#3265#0" />
             <element signature="e#835#984#0" />
             <element signature="e#1000#1151#0" />
             <element signature="e#1166#1327#0" />
@@ -1722,6 +1725,7 @@
             <element signature="e#89837#90042#0" />
             <element signature="e#89967#90042#0" />
             <element signature="e#87178#89353#0" />
+            <element signature="e#89407#197705#0" />
             <element signature="e#89407#90114#1" />
             <element signature="e#90421#90719#0" />
             <element signature="e#90782#90948#0" />
@@ -2015,6 +2019,7 @@
             <element signature="e#193784#194387#0" />
             <element signature="e#194449#195052#0" />
             <element signature="e#195114#195717#0" />
+            <element signature="e#195774#197687#0" />
             <element signature="e#197689#197707#0" />
             <element signature="e#197810#197890#0" />
             <element signature="e#197908#197986#0" />
@@ -2022,16 +2027,9 @@
             <element signature="e#198055#198093#0" />
             <element signature="e#198104#198145#0" />
             <element signature="e#198222#198261#0" />
-            <marker date="1588857128029" expanded="true" signature="30935:30938" ph="..." />
-            <marker date="1588857128029" expanded="true" signature="95574:95577" ph="..." />
+            <marker date="1588860387781" expanded="true" signature="32068:32071" ph="..." />
+            <marker date="1588860387781" expanded="true" signature="96707:96710" ph="..." />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/.gitignore">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="410">
-          <caret line="141" column="8" selection-start-line="141" selection-start-column="8" selection-end-line="141" selection-end-column="8" />
         </state>
       </provider>
     </entry>
