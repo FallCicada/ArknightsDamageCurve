@@ -122,13 +122,14 @@ def plot_curve(char_dict, stage, write_file, axes, pick_list, defense, mr, simul
     """
     legend_list, slay_list = list(), list()
     for desc, char in char_dict.items():
-        # print(desc)
         # Filter characters
         _, name, skill = desc.split("-")
 
         if pick_list and ((name not in pick_list and "%s%s" % (name, skill[0]) not in pick_list) and
                           "%s-%s技能" % (name, skill[0]) != baseline):
             continue
+
+        print(desc)
 
         # Plot damage curve for each character
         damage_node = char.simulate(simulate_time, defense, mr)
@@ -656,22 +657,63 @@ DefaultPickList = {
         "Baseline": None,
         "IgnorePolish": False
     },
+    "SplashCaster": {
+        "PickListName": "群法",
+        "PickList": ["艾雅法拉2", "莫斯提马2", "天火2", "伊芙利特2", "伊芙利特3"],
+        "Baseline": "天火-2技能",
+        "IgnorePolish": False
+    },
+    "SplashSniper": {
+        "PickListName": "群狙",
+        "PickList": ["陨星", "W", "慑砂", "白雪2"],
+        "Baseline": "陨星-2技能",
+        "IgnorePolish": False
+    },
+    "SplashGeneral": {
+        "PickListName": "打年糕",
+        "PickList": ["W2", "W3", "陨星1", "莫斯提马2", "天火2", "伊芙利特2", "伊芙利特3", "狮蝎2"],
+        "Baseline": "天火-2技能",
+        "IgnorePolish": False
+    },
+    "Single": {
+        "PickListName": "单体输出",
+        "PickList": ["红豆2", "苇草2", "炎客", "芙兰卡2", "斯卡蒂1", "斯卡蒂3", "因陀罗", "猎蜂2"],
+        "Baseline": "缠丸-1技能",
+        "IgnorePolish": True,
+        "MultiTarget": False
+    },
+    "New_20_03_17": {
+        "PickListName": "20_03_17_新增",
+        "PickList": ["惊蛰", "刻俄柏", "风笛", "慑砂", "柏喙", "宴"],
+        "Baseline": None,
+        "IgnorePolish": True
+    },
+    "New_20_05_01": {
+        # 断罪者1，刻刀，铸铁，极境，温蒂（无召唤物），W
+        "PickListName": "20_05_01_新增",
+        "PickList": ["断罪者1", "刻刀", "铸铁", "极境", "温蒂", "W"],
+        "Baseline": None,
+        "IgnorePolish": True
+    },
 }
 
 if __name__ == "__main__":
     # Parameters
     # TODO: You can set your parameters below
     Stage = "29010"
-    Pick = DefaultPickList["MeleePhysical"]
-    Enemy = "伐木老手"
+    Pick = DefaultPickList["New_20_05_01"]
+    # Enemy = "伐木老手"
     # Enemy = "梅菲斯特"
+    Enemy = "雪怪小队破冰者"
     # Enemy = "重装五十夫长"
+    # Enemy = "复仇者"
 
     PickList = Pick["PickList"]
+
     PickListName = Pick["PickListName"]
     Baseline = Pick["Baseline"]
     ShowSlayLine = Pick.get("ShowSlayLine", True)
-    MultiTarget = Pick.get("MultiTarget", True)
+    MultiTarget = Pick.get("MultiTarget", False)
     IgnorePolish = Pick.get("IgnorePolish", False)
     SimulationTime = 300
     # End Params

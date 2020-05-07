@@ -1,7 +1,7 @@
 # ArknightsDamageCurve-明日方舟伤害曲线模拟器
 
   A simple *python* script to generate damage curve for game **Arknights**
- 
+
   一个简单的python代码，用于生成300秒内各个干员的期望伤害的时间曲线
 
 
@@ -18,7 +18,7 @@
 	* [Usage](#Usage-Eng)
 
 同时发布于[NGA帖子](https://bbs.nga.cn/read.php?tid=20505654)，欢迎捧场
- 
+
 数据和影像资源全部来自于游戏本体，如遇版权问题，可能随时删除（我猜这玩意儿应该遇不上版权问题<img src="README/扇子脸.png" width="60">）
 
 <span id="环境配置-中文"></span>
@@ -57,7 +57,7 @@
 2. <font color=brown>**进阶用法：**</font>通过运行 `plot.py ` 来生成你自己想要的伤害曲线图，但你需要进行一些[参数的设置](#参数设置-中文)
 	* 修改 `plot.py` 中的参数，主要在 `__main__` 函数部分。你可以参考 `plot.py` 中的一些预设的参数
 	* 在 `plot.plot(...)` 你可以看到更多的关于参数的注释
-	  
+	
 3. 过一段时间会增加更多的介绍，包括假想敌的设置、更具体的用法、参数介绍、例子说明等 <del>在做了咕咕咕咕咕咕</del>
 
 <span id="参数设置-中文"></span>

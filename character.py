@@ -15,6 +15,7 @@ Charge_on_defense_equivalent_charge_speed = 0.75
 # Hellague approximately has +36 attack speed at 75% HP
 # Change this to set Hellague's HP ratio, thus change the attack speed of Hellague
 Hellagur_talent_hp_ratio = 0.75
+Hellagur_skill_talent_hp_ratio = 0.35
 
 # Provence has 50% attack scale up when target is at 60% HP
 # Change this to set Enemy's HP ratio for Provence(Wolf's Eye), thus change the damage of Provence
@@ -153,6 +154,11 @@ target_num_dict = {
     "大半径圆溅射": 3.2,  # 空爆1, 天火2
     "超大半径圆溅射": 3.6,  # 陨星1
 
+    "链接3次": 1.8,  # 精一惊蛰
+    "链接4次": 2.0,  # 精二惊蛰
+    "无衰减链接3次": 2.2,  # 精一惊蛰
+    "无衰减链接4次": 2.4,  # 精一惊蛰
+
     "0格打2": 1.3,  # 火神2, 格拉尼2
     "0格打3": 1.87,  # 坚雷2
 
@@ -186,6 +192,8 @@ target_num_dict = {
 
     "1格菱形群攻": 3.1,  # 推进之王2
 
+    "2格菱形打5": 3.00,  # 1~6级刻刀2
+    "2格菱形打6": 3.23,  # 7~10级刻刀2
     "2格菱形群攻": 3.55,  # 德克萨斯2
 
     "3格菱形打3": 2.55,  # 1~3级艾雅法拉3
@@ -317,12 +325,12 @@ class StateData:
         else:
             self.dot_damage = self.dot_damage_raw * self.atk_scale * 0.05 * self.dmg_scale
         self.dot_frame = round(self.dot_time * 30)
-        # print("\tAttack: %-4d, Attack buff: %-3.0f%%, Attack Scale: %-3.0f%%, Damage buff: %-3.0f%% ;"
-        #       % (self.atk, self.atk_up * 100, self.atk_scale * 100, self.dmg_scale * 100))
-        # print("\tDamage per attack: %-7.1f" % self.damage, end="; ")
-        # print("Attack interval in frame: %-3d" % self.frame, end="; ")
-        # print("DPS: %-7.1f" % (self.damage / self.frame * 30), end="; ")
-        # print()
+        print("\tAttack: %-4d, Attack buff: %-3.0f%%, Attack Scale: %-3.0f%%, Damage buff: %-3.0f%% ;"
+              % (self.atk, self.atk_up * 100, self.atk_scale * 100, self.dmg_scale * 100))
+        print("\tDamage per attack: %-7.1f" % self.damage, end="; ")
+        print("Attack interval in frame: %-3d" % self.frame, end="; ")
+        print("DPS: %-7.1f" % (self.damage / self.frame * 30), end="; ")
+        print()
 
 
 class CharacterData:
@@ -473,7 +481,7 @@ class CharacterData:
                             dot_dmg = N.dot_damage
                             dot_remain = N.dot_frame
                 if sp_recovery_block <= 0 and self.sp_type == "attack":
-                    curr_sp += 30
+                    curr_sp += 30 * self.sp_recovery
 
                 damage_node.append((frame / 30, damage))
 
@@ -614,7 +622,7 @@ class ArmorBreaker(CharacterData):
                                 dot_remain = BN.dot_frame
 
                 if sp_recovery_block <= 0 and self.sp_type == "attack":
-                    curr_sp += 30
+                    curr_sp += 30 * self.sp_recovery
 
                 damage_node.append((frame / 30, damage))
 
@@ -718,7 +726,132 @@ class TalentAtkBuff(CharacterData):
                             dot_dmg = N.dot_damage
                             dot_remain = N.dot_frame
                 if sp_recovery_block <= 0 and self.sp_type == "attack":
-                    curr_sp += 30
+                    curr_sp += 30 * self.sp_recovery
+                damage_node.append((frame / 30, damage))
+
+        return damage_node
+
+
+class PeriodBuff(CharacterData):
+    """
+    For characters with a period of buff on attack or skill.
+
+        -`normal_buff_duration`: Duration of buff in normal state
+        -`skill_buff_duration`: Duration of buff in skill
+    """
+
+    def __init__(self, name, skill_order, basic_info_dict, normal_info_dict, skill_info_dict):
+        CharacterData.__init__(self, name, skill_order, basic_info_dict, normal_info_dict, skill_info_dict)
+        self.BuffNormalData = StateData(normal_info_dict, dmg_type=self.normal_damage_type, is_skill_state=False)
+        self.BuffSkillData = StateData(skill_info_dict, dmg_type=self.skill_damage_type, is_skill_state=True)
+        self.normal_buff_duration = 0
+        self.skill_buff_duration = 0
+
+    def simulate(self, simulate_time, defense, magic_resistance):
+        damage_node = list()
+        N, BN = self.NormalData, self.BuffNormalData
+        S, BS = self.SkillData, self.BuffSkillData
+        N.save_temp(defense, magic_resistance)
+        BN.save_temp(defense, magic_resistance)
+        S.save_temp(defense, magic_resistance)
+        BS.save_temp(defense, magic_resistance)
+
+        curr_sp = self.init_sp * 30
+        sp_cost = self.sp_cost * 30
+
+        atk_cooldown = 0
+        skill_remain = 0
+        buff_remain = 0
+        sp_recovery_block = 0
+
+        frame = 0
+        damage = 0
+        stun = 0
+        skill = False
+
+        dot_remain = 0
+        dot_interval = 0
+        dot_dmg = 0
+
+        while frame < simulate_time * 30:
+            frame += 1
+            atk_cooldown -= 1
+            skill_remain -= 1
+            buff_remain -= 1
+            sp_recovery_block -= 1
+
+            if dot_dmg > 0 and dot_remain > 0:
+                dot_remain -= 1
+                dot_interval -= 1
+                if dot_interval <= 0:
+                    damage += dot_dmg
+                    damage_node.append((frame / 30, damage))
+                    dot_interval = 30
+
+            if sp_recovery_block <= 0 and self.sp_type == "auto":
+                curr_sp += self.sp_recovery
+
+            if stun > 0:
+                stun -= 1
+                continue
+
+            if skill_remain < 0 and skill:
+                skill = False
+                if self.skill_reset_cooldown_flag:
+                    atk_cooldown = 5
+                stun = S.stun * 30
+
+            if curr_sp >= sp_cost:
+                skill_remain = self.skill_duration * 30
+                skill = True
+                sp_recovery_block = self.sp_recovery_block_time * 30
+                curr_sp = 0.0
+                if self.skill_reset_cooldown_flag:
+                    atk_cooldown = 5
+
+            if atk_cooldown <= 0:
+                if skill:
+                    buff_remain = max([self.skill_buff_duration * 30, buff_remain])
+                    if buff_remain > 0:
+                        damage += BS.damage * BS.atk_times * BS.equivalent_target_num
+                        atk_cooldown = BS.frame
+                        if BS.dot_damage > 0:
+                            if dot_remain > 0:
+                                dot_remain = BS.dot_frame
+                            else:
+                                dot_dmg = BS.dot_damage
+                                dot_remain = BS.dot_frame
+                    else:
+                        damage += S.damage * S.atk_times * S.equivalent_target_num
+                        atk_cooldown = S.frame
+                        if S.dot_damage > 0:
+                            if dot_remain > 0:
+                                dot_remain = S.dot_frame
+                            else:
+                                dot_dmg = S.dot_damage
+                                dot_remain = S.dot_frame
+                else:
+                    buff_remain = max([self.normal_buff_duration * 30, buff_remain])
+                    if buff_remain > 0:
+                        damage += BN.damage * BN.atk_times * BN.equivalent_target_num
+                        atk_cooldown = BN.frame
+                        if N.dot_damage > 0:
+                            if dot_remain > 0:
+                                dot_remain = BN.dot_frame
+                            else:
+                                dot_dmg = BN.dot_damage
+                                dot_remain = BN.dot_frame
+                    else:
+                        damage += N.damage * N.atk_times * N.equivalent_target_num
+                        atk_cooldown = N.frame
+                        if N.dot_damage > 0:
+                            if dot_remain > 0:
+                                dot_remain = N.dot_frame
+                            else:
+                                dot_dmg = N.dot_damage
+                                dot_remain = N.dot_frame
+                if sp_recovery_block <= 0 and self.sp_type == "attack":
+                    curr_sp += 30 * self.sp_recovery
                 damage_node.append((frame / 30, damage))
 
         return damage_node
@@ -820,7 +953,7 @@ class Astesia(CharacterData):
                             dot_dmg = N.dot_damage
                             dot_remain = N.dot_frame
                 if sp_recovery_block <= 0 and self.sp_type == "attack":
-                    curr_sp += 30
+                    curr_sp += 30 * self.sp_recovery
 
                 damage_node.append((frame / 30, damage))
 
@@ -930,7 +1063,7 @@ class Blaze(CharacterData):
                             dot_interval = 0
                         dot_remain = N.dot_frame
                 if sp_recovery_block <= 0 and self.sp_type == "attack":
-                    curr_sp += 30
+                    curr_sp += 30 * self.sp_recovery
 
                 damage_node.append((frame / 30, damage))
 
@@ -1028,7 +1161,7 @@ class Chen(CharacterData):
                             dot_dmg = N.dot_damage
                             dot_remain = N.dot_frame
                 if sp_recovery_block <= 0 and self.sp_type == "attack":
-                    curr_sp += 30
+                    curr_sp += 30 * self.sp_recovery
 
                 damage_node.append((frame / 30, damage))
 
@@ -1152,7 +1285,7 @@ class Haze(CharacterData):
                                 dot_remain = TN.dot_frame
 
                 if sp_recovery_block <= 0 and self.sp_type == "attack":
-                    curr_sp += 30
+                    curr_sp += 30 * self.sp_recovery
 
                 damage_node.append((frame / 30, damage))
 
@@ -1245,7 +1378,7 @@ class Amiya(CharacterData):
                             dot_dmg = N.dot_damage
                             dot_remain = N.dot_frame
                 if sp_recovery_block <= 0 and self.sp_type == "attack":
-                    curr_sp += 30
+                    curr_sp += 30 * self.sp_recovery
 
                 damage_node.append((frame / 30, damage))
 
@@ -1392,7 +1525,109 @@ class Eyjafjalla(CharacterData):
                                 dot_remain = TN.dot_frame
 
                 if sp_recovery_block <= 0 and self.sp_type == "attack":
-                    curr_sp += 30
+                    curr_sp += 30 * self.sp_recovery
+
+                damage_node.append((frame / 30, damage))
+
+        return damage_node
+
+
+class Ceobe(CharacterData):
+    def __init__(self, name, skill_order, basic_info_dict, normal_info_dict, skill_info_dict):
+        CharacterData.__init__(self, name, skill_order, basic_info_dict, normal_info_dict, skill_info_dict)
+        self.talent_dmg_scale = 0
+
+    def add_talent_dmg(self, state, defense, magic_resistance):
+        enemy_def = (defense + state.enemy_defense_decrease_value) * (1 + state.enemy_defense_decrease_ratio)
+        if enemy_def < 0:
+            enemy_def = 0
+        enemy_mr = (magic_resistance + state.enemy_magic_resistance_decrease_value) * (
+                1 + state.enemy_magic_resistance_decrease_ratio)
+        if enemy_mr > 95:
+            enemy_mr = 95
+        state.damage += self.talent_dmg_scale * enemy_def * (100 - enemy_mr) / 100
+
+    def simulate(self, simulate_time, defense, magic_resistance):
+        damage_node = list()
+        N = self.NormalData
+        S = self.SkillData
+        N.save_temp(defense, magic_resistance)
+        S.save_temp(defense, magic_resistance)
+        self.add_talent_dmg(N, defense, magic_resistance)
+        self.add_talent_dmg(S, defense, magic_resistance)
+
+        curr_sp = self.init_sp * 30
+        sp_cost = self.sp_cost * 30
+
+        atk_cooldown = 0
+        skill_remain = 0
+        sp_recovery_block = 0
+
+        frame = 0
+        damage = 0
+        stun = 0
+        skill = False
+
+        dot_remain = 0
+        dot_interval = 0
+        dot_dmg = 0
+
+        while frame < simulate_time * 30:
+            frame += 1
+            atk_cooldown -= 1
+            skill_remain -= 1
+            sp_recovery_block -= 1
+
+            if dot_dmg > 0 and dot_remain > 0:
+                dot_remain -= 1
+                dot_interval -= 1
+                if dot_interval <= 0:
+                    damage += dot_dmg
+                    damage_node.append((frame / 30, damage))
+                    dot_interval = 30
+
+            if sp_recovery_block <= 0 and self.sp_type == "auto":
+                curr_sp += self.sp_recovery
+
+            if stun > 0:
+                stun -= 1
+                continue
+
+            if skill_remain < 0 and skill:
+                skill = False
+                if self.skill_reset_cooldown_flag:
+                    atk_cooldown = 5
+                stun = S.stun * 30
+
+            if curr_sp >= sp_cost:
+                skill_remain = self.skill_duration * 30
+                skill = True
+                sp_recovery_block = self.sp_recovery_block_time * 30
+                curr_sp = 0.0
+                if self.skill_reset_cooldown_flag:
+                    atk_cooldown = 5
+
+            if atk_cooldown <= 0:
+                if skill:
+                    damage += S.damage * S.atk_times * S.equivalent_target_num
+                    atk_cooldown = S.frame
+                    if S.dot_damage > 0:
+                        if dot_remain > 0:
+                            dot_remain = S.dot_frame
+                        else:
+                            dot_dmg = S.dot_damage
+                            dot_remain = S.dot_frame
+                else:
+                    damage += N.damage * N.atk_times * N.equivalent_target_num
+                    atk_cooldown = N.frame
+                    if N.dot_damage > 0:
+                        if dot_remain > 0:
+                            dot_remain = N.dot_frame
+                        else:
+                            dot_dmg = N.dot_damage
+                            dot_remain = N.dot_frame
+                if sp_recovery_block <= 0 and self.sp_type == "attack":
+                    curr_sp += 30 * self.sp_recovery
 
                 damage_node.append((frame / 30, damage))
 
@@ -1492,7 +1727,7 @@ class Ifrit(CharacterData):
                             dot_remain = N.dot_frame
 
                 if sp_recovery_block <= 0 and self.sp_type == "attack":
-                    curr_sp += 30
+                    curr_sp += 30 * self.sp_recovery
 
                 damage_node.append((frame / 30, damage))
 
@@ -1607,7 +1842,7 @@ class BluePoison(CharacterData):
                             dot_dmg = N.dot_damage
                             dot_remain = N.dot_frame
                 if sp_recovery_block <= 0 and self.sp_type == "attack":
-                    curr_sp += 30
+                    curr_sp += 30 * self.sp_recovery
 
                 damage_node.append((frame / 30, damage))
 
@@ -1722,7 +1957,7 @@ class Platinum(CharacterData):
                 atk_interval_frame = 0
 
                 if sp_recovery_block <= 0 and self.sp_type == "attack":
-                    curr_sp += 30
+                    curr_sp += 30 * self.sp_recovery
 
                 damage_node.append((frame / 30, damage))
 
@@ -1869,7 +2104,7 @@ class Meteorite(ArmorBreaker):
                                 dot_remain = BN.dot_frame
 
                 if sp_recovery_block <= 0 and self.sp_type == "attack":
-                    curr_sp += 30
+                    curr_sp += 30 * self.sp_recovery
 
                 damage_node.append((frame / 30, damage))
 
@@ -2080,7 +2315,7 @@ class Schwarz(CharacterData):
                               TBN.damage * self.atk_type_dict["skill_break_talent"]
 
                 if sp_recovery_block <= 0 and self.sp_type == "attack":
-                    curr_sp += 30
+                    curr_sp += 30 * self.sp_recovery
 
                 damage_node.append((frame / 30, damage))
 
@@ -2201,7 +2436,98 @@ class Manticore(CharacterData):
                                 dot_remain = TN.dot_frame
                 talent_frame = self.atk_buff_interval * 30
                 if sp_recovery_block <= 0 and self.sp_type == "attack":
-                    curr_sp += 30
+                    curr_sp += 30 * self.sp_recovery
+                damage_node.append((frame / 30, damage))
+
+        return damage_node
+
+
+class Weedy(CharacterData):
+    def __init__(self, name, skill_order, basic_info_dict, normal_info_dict, skill_info_dict):
+        CharacterData.__init__(self, name, skill_order, basic_info_dict, normal_info_dict, skill_info_dict)
+        self.real_damage_by_shift = 0
+
+    def simulate(self, simulate_time, defense, magic_resistance):
+        damage_node = list()
+        N = self.NormalData
+        S = self.SkillData
+        N.save_temp(defense, magic_resistance)
+        S.save_temp(defense, magic_resistance)
+
+        curr_sp = self.init_sp * 30
+        sp_cost = self.sp_cost * 30
+
+        atk_cooldown = 0
+        skill_remain = 0
+        sp_recovery_block = 0
+
+        frame = 0
+        damage = 0
+        stun = 0
+        skill = False
+
+        dot_remain = 0
+        dot_interval = 0
+        dot_dmg = 0
+
+        while frame < simulate_time * 30:
+            frame += 1
+            atk_cooldown -= 1
+            skill_remain -= 1
+            sp_recovery_block -= 1
+
+            if dot_dmg > 0 and dot_remain > 0:
+                dot_remain -= 1
+                dot_interval -= 1
+                if dot_interval <= 0:
+                    damage += dot_dmg
+                    damage_node.append((frame / 30, damage))
+                    dot_interval = 30
+
+            if sp_recovery_block <= 0 and self.sp_type == "auto":
+                curr_sp += self.sp_recovery
+
+            if stun > 0:
+                stun -= 1
+                continue
+
+            if skill_remain < 0 and skill:
+                skill = False
+                if self.skill_reset_cooldown_flag:
+                    atk_cooldown = 5
+                stun = S.stun * 30
+
+            if curr_sp >= sp_cost:
+                skill_remain = self.skill_duration * 30
+                skill = True
+                sp_recovery_block = self.sp_recovery_block_time * 30
+                curr_sp = 0.0
+                if self.skill_reset_cooldown_flag:
+                    atk_cooldown = 5
+
+            if atk_cooldown <= 0:
+                if skill:
+                    damage += S.damage * S.atk_times * S.equivalent_target_num
+                    damage += self.real_damage_by_shift * S.equivalent_target_num
+                    atk_cooldown = S.frame
+                    if S.dot_damage > 0:
+                        if dot_remain > 0:
+                            dot_remain = S.dot_frame
+                        else:
+                            dot_dmg = S.dot_damage
+                            dot_remain = S.dot_frame
+                else:
+                    damage += N.damage * N.atk_times * N.equivalent_target_num
+                    atk_cooldown = N.frame
+                    if N.dot_damage > 0:
+                        if dot_remain > 0:
+                            dot_remain = N.dot_frame
+                        else:
+                            dot_dmg = N.dot_damage
+                            dot_remain = N.dot_frame
+                if sp_recovery_block <= 0 and self.sp_type == "attack":
+                    curr_sp += 30 * self.sp_recovery
+
                 damage_node.append((frame / 30, damage))
 
         return damage_node
@@ -2282,13 +2608,22 @@ def modify_data(f, stage, multi_target=False):
         if name == "缠丸" and skill_order == "1":
             B, N, S = load_data(row)
             tmp = CharacterData(name, skill_order, basic_info_dict=B, normal_info_dict=N, skill_info_dict=S)
-            tmp.skill_duration = 1.2
-            tmp.sp_recovery_block_time = 1.2
+            tmp.skill_duration = 45 / 30
+            tmp.sp_recovery_block_time = 45 / 30
+            tmp.SkillData.atk = 0
             tmp.skill_reset_cooldown_flag = False
             char_dict[key] = tmp
         elif name == "缠丸" and skill_order == "2":
             B, N, S = load_data(row)
             tmp = CharacterData(name, skill_order, basic_info_dict=B, normal_info_dict=N, skill_info_dict=S)
+            char_dict[key] = tmp
+
+        elif name == "断罪者" and skill_order == "1":
+            B, N, S = load_data(row)
+            tmp = TalentAtkBuff(name, skill_order, basic_info_dict=B, normal_info_dict=N, skill_info_dict=S)
+            tmp.replace_basic_attack()
+            tmp.TalentSkillData.atk_scale *= eval(row["Skill Dict"]).get("peacok_s_1[crit].atk_scale", 1.0)
+            tmp.skill_trig_prob = eval(row["Skill Dict"]).get("peacok_s_1[crit].prob", 0.05)
             char_dict[key] = tmp
 
         elif name == "芙兰卡" and skill_order == "1":
@@ -2411,6 +2746,25 @@ def modify_data(f, stage, multi_target=False):
                 tmp.SkillData.equivalent_target_num = target_num_dict["1格打2"]
                 tmp.generate_multi_target_desc()
             char_dict[key] = tmp
+
+        elif name == "铸铁" and skill_order == "1":
+            # Attack speed set to 115
+            B, N, S = load_data(row)
+            tmp = CharacterData(name, skill_order, basic_info_dict=B, normal_info_dict=N, skill_info_dict=S)
+            tmp.skill_duration = 39 / 30
+            tmp.sp_recovery_block_time = 39 / 30
+            tmp.SkillData.atk = 0
+            tmp.skill_reset_cooldown_flag = False
+            tmp.magic_damage()
+        elif name == "铸铁" and skill_order == "2":
+            # Attack speed set to 115
+            B, N, S = load_data(row)
+            tmp = CharacterData(name, skill_order, basic_info_dict=B, normal_info_dict=N, skill_info_dict=S)
+            tmp.skill_duration = 39 / 30
+            tmp.sp_recovery_block_time = 39 / 30
+            tmp.SkillData.atk = 0
+            tmp.skill_reset_cooldown_flag = False
+            tmp.magic_damage()
 
         elif name == "霜叶" and skill_order == "1":
             B, N, S = load_data(row)
@@ -2614,6 +2968,50 @@ def modify_data(f, stage, multi_target=False):
                                                                       target_num_dict["精一群法群攻"])
             char_dict[key] = tmp
 
+        elif name == "宴" and skill_order == "1":
+            B, N, S = load_data(row)
+            tmp = CharacterData(name, skill_order, basic_info_dict=B, normal_info_dict=N, skill_info_dict=S)
+            tmp.SkillData.atk_scale = 0
+            MinAS = eval(row["Talent Dict"]).get('min_attack_speed', 0.0)
+            MaxAS = eval(row["Talent Dict"]).get('max_attack_speed', 0.0)
+            MinHP = eval(row["Talent Dict"]).get('min_hp_ratio', 0.0)
+            MaxHP = eval(row["Talent Dict"]).get('max_hp_ratio', 1.0)
+            if Hellagur_talent_hp_ratio <= MinHP:
+                Utage_atk_speed = MinAS
+            elif Hellagur_talent_hp_ratio >= MaxHP:
+                Utage_atk_speed = MaxAS
+            else:
+                Utage_atk_speed = (MaxAS * (Hellagur_talent_hp_ratio - MinHP)
+                                   + MinAS * (MaxHP - Hellagur_talent_hp_ratio)) / (MaxHP - MinHP)
+            tmp.NormalData.atk_speed_up = Utage_atk_speed
+            tmp.SkillData.atk_speed_up = Utage_atk_speed
+            char_dict[key] = tmp
+        elif name == "宴" and skill_order == "2":
+            B, N, S = load_data(row)
+            tmp = CharacterData(name, skill_order, basic_info_dict=B, normal_info_dict=N, skill_info_dict=S)
+            tmp.release_on_deploy(eval(row["Skill Dict"]).get("duration", 0.0))
+            MinAS = eval(row["Talent Dict"]).get('min_attack_speed', 0.0)
+            MaxAS = eval(row["Talent Dict"]).get('max_attack_speed', 0.0)
+            MinHP = eval(row["Talent Dict"]).get('min_hp_ratio', 0.0)
+            MaxHP = eval(row["Talent Dict"]).get('max_hp_ratio', 1.0)
+            if Hellagur_talent_hp_ratio <= MinHP:
+                Utage_atk_speed = MinAS
+            elif Hellagur_talent_hp_ratio >= MaxHP:
+                Utage_atk_speed = MaxAS
+            else:
+                Utage_atk_speed = (MaxAS * (Hellagur_talent_hp_ratio - MinHP)
+                                   + MinAS * (MaxHP - Hellagur_talent_hp_ratio)) / (MaxHP - MinHP)
+            if Hellagur_skill_talent_hp_ratio <= MinHP:
+                Utage_skill_atk_speed = MinAS
+            elif Hellagur_skill_talent_hp_ratio >= MaxHP:
+                Utage_skill_atk_speed = MaxAS
+            else:
+                Utage_skill_atk_speed = (MaxAS * (Hellagur_skill_talent_hp_ratio - MinHP)
+                                         + MinAS * (MaxHP - Hellagur_skill_talent_hp_ratio)) / (MaxHP - MinHP)
+            tmp.NormalData.atk_speed_up = Utage_atk_speed
+            tmp.SkillData.atk_speed_up = Utage_skill_atk_speed
+            char_dict[key] = tmp
+
         elif name == "赫拉格" and skill_order == "1":
             # Assume the talent always gives attack speed buff as set in `Hellagur_atk_speed`
             B, N, S = load_data(row)
@@ -2676,6 +3074,59 @@ def modify_data(f, stage, multi_target=False):
                 tmp.generate_multi_target_desc()
             char_dict[key] = tmp
 
+        elif name == "刻刀" and skill_order == "1":
+            B, N, S = load_data(row)
+            tmp = CharacterData(name, skill_order, basic_info_dict=B, normal_info_dict=N, skill_info_dict=S)
+            tmp.sp_recovery += eval(row["Talent Dict"]).get('sp', 0.0) * eval(row["Talent Dict"]).get('prob', 0.0)
+            tmp.NormalData.atk_times = 2
+            tmp.SkillData.atk_times = eval(row["Skill Dict"]).get('times', 0.0)
+            tmp.skill_duration = 30 / 30
+            tmp.sp_recovery_block_time = 30 / 30
+            char_dict[key] = tmp
+        elif name == "刻刀" and skill_order == "2":
+            B, N, S = load_data(row)
+            tmp = Chen(name, skill_order, basic_info_dict=B, normal_info_dict=N, skill_info_dict=S)
+            tmp.sp_recovery += eval(row["Talent Dict"]).get('sp', 0.0) * eval(row["Talent Dict"]).get('prob', 0.0)
+            tmp.NormalData.atk_times = 2
+            tmp.SkillData.atk_times = 1
+            tmp.skill_duration = 30 / 30
+            tmp.sp_recovery_block_time = 30 / 30
+            if multi_target:
+                target_num_key = "2格菱形打%.0f" % eval(row["Skill Dict"]).get("max_target",5.0)
+                tmp.SkillData.equivalent_target_num = target_num_dict[target_num_key]
+                tmp.generate_multi_target_desc()
+            char_dict[key] = tmp
+
+        elif name == "柏喙" and skill_order == "1":
+            # Attack speed set to 136
+            B, N, S = load_data(row)
+            tmp = CharacterData(name, skill_order, basic_info_dict=B, normal_info_dict=N, skill_info_dict=S)
+            tmp.NormalData.atk_times = 2
+            tmp.SkillData.atk_times = 2
+            tmp.replace_basic_attack()
+            if multi_target:
+                target_num_key = "1格打2"
+                tmp.SkillData.equivalent_target_num = 1
+                tmp.SkillData.dmg_type = "mix"
+                tmp.SkillData.dmg_scale = 2.0
+                tmp.SkillData.mix_physical_scale = tmp.SkillData.atk_scale
+                tmp.SkillData.mix_magic_scale = tmp.SkillData.atk_scale * (target_num_dict[target_num_key] - 1) / 2.0
+                tmp.multi_target_desc = "技能打%.2f" % target_num_dict[target_num_key]
+            char_dict[key] = tmp
+        elif name == "柏喙" and skill_order == "2":
+            # Attack speed set to 136
+            B, N, S = load_data(row)
+            tmp = CharacterData(name, skill_order, basic_info_dict=B, normal_info_dict=N, skill_info_dict=S)
+            tmp.NormalData.atk_times = 2
+            tmp.SkillData.dmg_type = "magic"
+            tmp.skill_duration = 8 / 30
+            tmp.sp_recovery_block_time = 8 / 30
+            if multi_target:
+                target_num_key = "3格远卫打%.0f" % eval(row["Skill Dict"]).get("max_target", 4.0)
+                tmp.SkillData.equivalent_target_num = target_num_dict[target_num_key]
+                tmp.generate_multi_target_desc()
+            char_dict[key] = tmp
+
         elif name == "陈" and skill_order == "1":
             B, N, S = load_data(row)
             tmp = Chen(name, skill_order, basic_info_dict=B, normal_info_dict=N, skill_info_dict=S)
@@ -2690,8 +3141,8 @@ def modify_data(f, stage, multi_target=False):
             tmp.SkillData.dmg_type = "mix"
             tmp.SkillData.mix_physical_scale = 5.0
             tmp.SkillData.mix_magic_scale = 5.0
-            tmp.skill_duration = 8 / 30
-            tmp.sp_recovery_block_time = 8 / 30
+            tmp.skill_duration = 40 / 30
+            tmp.sp_recovery_block_time = 40 / 30
             if multi_target:
                 target_num_key = "3格远卫打%.0f" % eval(row["Skill Dict"]).get("max_target", 4.0)
                 tmp.SkillData.equivalent_target_num = target_num_dict[target_num_key]
@@ -2701,8 +3152,8 @@ def modify_data(f, stage, multi_target=False):
             B, N, S = load_data(row)
             tmp = Chen(name, skill_order, basic_info_dict=B, normal_info_dict=N, skill_info_dict=S)
             tmp.NormalData.atk_times = 2
-            tmp.skill_duration = 4
-            tmp.SkillData.frame = 12
+            tmp.skill_duration = 102 / 30
+            tmp.SkillData.frame = 11
             char_dict[key] = tmp
 
         elif name == "猎蜂" and skill_order == "1":
@@ -2776,7 +3227,7 @@ def modify_data(f, stage, multi_target=False):
             tmp.magic_damage()
             tmp.sp_recovery_by_atk = eval(row["Talent Dict"]).get("amiya_t_1[atk].sp", 0)
             tmp.SkillData.atk_scale = eval(row["Skill Dict"]).get("attack@atk_scale", 1.0)
-            tmp.SkillData.atk_times = eval(row["Skill Dict"]).get("attack@times", 1.0)
+            tmp.SkillData.atk_times = eval(row["Skill Dict"]).get("attack@—times", 1.0)
             tmp.SkillData.stun = eval(row["Skill Dict"]).get("stun", 0)
             char_dict[key] = tmp
         elif name == "阿米娅" and skill_order == "3":
@@ -2829,6 +3280,35 @@ def modify_data(f, stage, multi_target=False):
                 target_num_key = "3格菱形打%.0f" % eval(row["Skill Dict"]).get("attack@max_target", 3.0)
                 tmp.SkillData.equivalent_target_num = target_num_dict[target_num_key]
                 tmp.generate_multi_target_desc()
+            char_dict[key] = tmp
+
+        elif name == "刻俄柏" and skill_order == "1":
+            B, N, S = load_data(row)
+            tmp = Ceobe(name, skill_order, basic_info_dict=B, normal_info_dict=N, skill_info_dict=S)
+            tmp.magic_damage()
+            tmp.replace_basic_attack()
+            tmp.talent_dmg_scale = eval(row["Talent Dict"]).get("atk_scale", 0)
+            tmp.NormalData.atk_scale /= eval(row["Talent Dict"]).get("atk_scale", 0)
+            tmp.SkillData.atk_scale /= eval(row["Talent Dict"]).get("atk_scale", 0)
+            char_dict[key] = tmp
+        elif name == "刻俄柏" and skill_order == "2":
+            B, N, S = load_data(row)
+            tmp = Ceobe(name, skill_order, basic_info_dict=B, normal_info_dict=N, skill_info_dict=S)
+            tmp.magic_damage()
+            tmp.talent_dmg_scale = eval(row["Talent Dict"]).get("atk_scale", 0)
+            tmp.NormalData.atk_scale /= eval(row["Talent Dict"]).get("atk_scale", 0)
+            tmp.SkillData.atk_scale /= eval(row["Talent Dict"]).get("atk_scale", 0)
+            tmp.SkillData.atk_time_add_modifier -= eval(row["Skill Dict"]).get("base_attack_time", 0.0)
+            tmp.SkillData.atk_time_mul_modifier = eval(row["Skill Dict"]).get("base_attack_time", 0.0) - 1
+            char_dict[key] = tmp
+        elif name == "刻俄柏" and skill_order == "3":
+            B, N, S = load_data(row)
+            tmp = Ceobe(name, skill_order, basic_info_dict=B, normal_info_dict=N, skill_info_dict=S)
+            tmp.magic_damage()
+            tmp.SkillData.dmg_type = "physical"
+            tmp.talent_dmg_scale = eval(row["Talent Dict"]).get("atk_scale", 0)
+            tmp.NormalData.atk_scale /= eval(row["Talent Dict"]).get("atk_scale", 0)
+            tmp.SkillData.atk_scale /= eval(row["Talent Dict"]).get("atk_scale", 0)
             char_dict[key] = tmp
 
         elif name == "格雷伊" and skill_order == "1":
@@ -2970,6 +3450,27 @@ def modify_data(f, stage, multi_target=False):
             if multi_target:
                 tmp.NormalData.equivalent_target_num = target_num_dict["5格群攻"]
                 tmp.SkillData.equivalent_target_num = target_num_dict["5格群攻"]
+                tmp.generate_multi_target_desc()
+            char_dict[key] = tmp
+
+        elif name == "惊蛰" and skill_order == "1":
+            B, N, S = load_data(row)
+            tmp = CharacterData(name, skill_order, basic_info_dict=B, normal_info_dict=N, skill_info_dict=S)
+            tmp.magic_damage()
+            if multi_target:
+                target_num_key = "链接%.0f次" % (eval(row["Talent Dict"]).get("attack@max_target", 3.0))
+                tmp.NormalData.equivalent_target_num = target_num_dict[target_num_key]
+                tmp.SkillData.equivalent_target_num = target_num_dict[target_num_key]
+                tmp.generate_multi_target_desc()
+            char_dict[key] = tmp
+        elif name == "惊蛰" and skill_order == "2":
+            B, N, S = load_data(row)
+            tmp = CharacterData(name, skill_order, basic_info_dict=B, normal_info_dict=N, skill_info_dict=S)
+            tmp.magic_damage()
+            if multi_target:
+                target_num_key = "链接%.0f次" % (eval(row["Talent Dict"]).get("attack@max_target", 3.0))
+                tmp.NormalData.equivalent_target_num = target_num_dict[target_num_key]
+                tmp.SkillData.equivalent_target_num = target_num_dict["无衰减" + target_num_key]
                 tmp.generate_multi_target_desc()
             char_dict[key] = tmp
 
@@ -3178,7 +3679,8 @@ def modify_data(f, stage, multi_target=False):
         elif name == "陨星" and skill_order == "2":
             B, N, S = load_data(row)
             tmp = Meteorite(name, skill_order, basic_info_dict=B, normal_info_dict=N, skill_info_dict=S)
-            tmp.skill_duration = 0.5
+            tmp.skill_duration = 85 / 30
+            tmp.sp_recovery_block_time = 31 / 30
             tmp.NormalData.atk_up -= eval(row["Talent Dict"]).get("atk", 0.0)
             tmp.SkillData.atk_up -= eval(row["Talent Dict"]).get("atk", 0.0)
             tmp.atk_up_ratio = eval(row["Talent Dict"]).get("atk", 0.0)
@@ -3186,6 +3688,70 @@ def modify_data(f, stage, multi_target=False):
             tmp.skill_break_flag = True
             tmp.enemy_def_decrease_value = eval(row["Skill Dict"]).get("def", 0.0)
             tmp.enemy_def_decrease_duration = eval(row["Skill Dict"]).get("duration", 0.0)
+            if multi_target:
+                tmp.NormalData.equivalent_target_num = target_num_dict["中半径圆溅射"]
+                tmp.SkillData.equivalent_target_num = target_num_dict["中半径圆溅射"]
+                tmp.generate_multi_target_desc()
+            char_dict[key] = tmp
+
+        elif name == "W" and skill_order == "1":
+            B, N, S = load_data(row)
+            tmp = PeriodBuff(name, skill_order, basic_info_dict=B, normal_info_dict=N, skill_info_dict=S)
+            tmp.skill_duration = 85 / 30  # TODO: Modify it
+            tmp.sp_recovery_block_time = 31 / 30  # TODO: Modify it
+            tmp.NormalData.dmg_scale /= eval(row["Talent Dict"]).get("damage_scale", 1.0)
+            tmp.SkillData.dmg_scale /= eval(row["Talent Dict"]).get("damage_scale", 1.0)
+            tmp.skill_buff_duration = eval(row["Skill Dict"]).get("stun", 0.0)
+            if multi_target:
+                tmp.NormalData.equivalent_target_num = target_num_dict["中半径圆溅射"]
+                tmp.BuffNormalData.equivalent_target_num = target_num_dict["中半径圆溅射"]
+                tmp.SkillData.equivalent_target_num = target_num_dict["中半径圆溅射"]
+                tmp.BuffSkillData.equivalent_target_num = target_num_dict["中半径圆溅射"]
+                tmp.generate_multi_target_desc()
+            char_dict[key] = tmp
+        elif name == "W" and skill_order == "2":
+            B, N, S = load_data(row)
+            tmp = PeriodBuff(name, skill_order, basic_info_dict=B, normal_info_dict=N, skill_info_dict=S)
+            tmp.skill_duration = 85 / 30  # TODO: Modify it
+            tmp.sp_recovery_block_time = 31 / 30  # TODO: Modify it
+            tmp.NormalData.dmg_scale /= eval(row["Talent Dict"]).get("damage_scale", 1.0)
+            tmp.SkillData.dmg_scale /= eval(row["Talent Dict"]).get("damage_scale", 1.0)
+            tmp.skill_buff_duration = eval(row["Skill Dict"]).get("stun", 0.0)
+            if multi_target:
+                tmp.NormalData.equivalent_target_num = target_num_dict["中半径圆溅射"]
+                tmp.BuffNormalData.equivalent_target_num = target_num_dict["中半径圆溅射"]
+                tmp.SkillData.equivalent_target_num = target_num_dict["中半径圆溅射"]
+                tmp.BuffSkillData.equivalent_target_num = target_num_dict["中半径圆溅射"]
+                tmp.generate_multi_target_desc()
+            char_dict[key] = tmp
+        elif name == "W" and skill_order == "3":
+            B, N, S = load_data(row)
+            tmp = PeriodBuff(name, skill_order, basic_info_dict=B, normal_info_dict=N, skill_info_dict=S)
+            tmp.skill_duration = 85 / 30  # TODO: Modify it
+            tmp.sp_recovery_block_time = 31 / 30  # TODO: Modify it
+            tmp.NormalData.dmg_scale /= eval(row["Talent Dict"]).get("damage_scale", 1.0)
+            tmp.SkillData.dmg_scale /= eval(row["Talent Dict"]).get("damage_scale", 1.0)
+            tmp.skill_buff_duration = eval(row["Skill Dict"]).get("stun", 0.0)
+            if multi_target:
+                tmp.NormalData.equivalent_target_num = target_num_dict["中半径圆溅射"]
+                tmp.BuffNormalData.equivalent_target_num = target_num_dict["中半径圆溅射"]
+                tmp.SkillData.equivalent_target_num = 8.5
+                tmp.BuffSkillData.equivalent_target_num = 8.5
+                tmp.generate_multi_target_desc()
+            char_dict[key] = tmp
+
+        elif name == "慑砂" and skill_order == "1":
+            B, N, S = load_data(row)
+            tmp = CharacterData(name, skill_order, basic_info_dict=B, normal_info_dict=N, skill_info_dict=S)
+            if multi_target:
+                tmp.NormalData.equivalent_target_num = target_num_dict["中半径圆溅射"]
+                tmp.SkillData.equivalent_target_num = target_num_dict["中半径圆溅射"]
+                tmp.generate_multi_target_desc()
+            char_dict[key] = tmp
+        elif name == "慑砂" and skill_order == "2":
+            B, N, S = load_data(row)
+            tmp = CharacterData(name, skill_order, basic_info_dict=B, normal_info_dict=N, skill_info_dict=S)
+            tmp.SkillData.atk_scale = eval(row["Skill Dict"]).get('attack@atk_scale', 1.0)
             if multi_target:
                 tmp.NormalData.equivalent_target_num = target_num_dict["中半径圆溅射"]
                 tmp.SkillData.equivalent_target_num = target_num_dict["中半径圆溅射"]
@@ -3412,9 +3978,9 @@ def modify_data(f, stage, multi_target=False):
             B, N, S = load_data(row)
             tmp = CharacterData(name, skill_order, basic_info_dict=B, normal_info_dict=N, skill_info_dict=S)
             tmp.replace_basic_attack()
-            tmp.skill_duration = 1.65
-            tmp.sp_recovery_block_time = 1.65
-            tmp.SkillData.atk_time = 1.65
+            tmp.skill_duration = 50 / 30
+            tmp.sp_recovery_block_time = 50 / 30
+            tmp.SkillData.atk_time = 50 / 30
             if multi_target:
                 tmp.SkillData.equivalent_target_num = target_num_dict["1格菱形群攻"]
                 tmp.generate_multi_target_desc()
@@ -3453,6 +4019,19 @@ def modify_data(f, stage, multi_target=False):
         elif name == "桃金娘" and skill_order == "2":
             B, N, S = load_data(row)
             tmp = CharacterData(name, skill_order, basic_info_dict=B, normal_info_dict=N, skill_info_dict=S)
+            tmp.SkillData.atk = 0
+            char_dict[key] = tmp
+
+        elif name == "极境" and skill_order == "1":
+            B, N, S = load_data(row)
+            tmp = CharacterData(name, skill_order, basic_info_dict=B, normal_info_dict=N, skill_info_dict=S)
+            tmp.NormalData.atk_speed_up -= eval(row["Talent Dict"]).get('attack_speed', 1.0)
+            tmp.SkillData.atk = 0
+            char_dict[key] = tmp
+        elif name == "极境" and skill_order == "2":
+            B, N, S = load_data(row)
+            tmp = CharacterData(name, skill_order, basic_info_dict=B, normal_info_dict=N, skill_info_dict=S)
+            tmp.NormalData.atk_speed_up -= eval(row["Talent Dict"]).get('attack_speed', 1.0)
             tmp.SkillData.atk = 0
             char_dict[key] = tmp
 
@@ -3495,6 +4074,55 @@ def modify_data(f, stage, multi_target=False):
             tmp.SkillData.dmg_type = "mix"
             tmp.SkillData.mix_physical_scale = 1.0
             tmp.SkillData.mix_magic_scale = eval(row["Skill Dict"]).get("attack@skill.atk_scale", 0.0)
+            char_dict[key] = tmp
+
+        elif name == "风笛" and skill_order == "1":
+            B, N, S = load_data(row)
+            tmp = TalentAtkBuff(name, skill_order, basic_info_dict=B, normal_info_dict=N, skill_info_dict=S)
+            tmp.NormalData.atk_up /= eval(row["Talent Dict"]).get("atk_scale", 0.0)
+            tmp.SkillData.atk_up /= eval(row["Talent Dict"]).get("atk_scale", 0.0)
+            tmp.normal_trig_prob = eval(row["Talent Dict"]).get("prob", 0.0)
+            tmp.skill_trig_prob = eval(row["Talent Dict"]).get("prob", 0.0)
+            tmp.init_sp += eval(row["Talent Dict"]).get("sp", 0.0)
+            if multi_target:
+                tmp.TalentNormalData.equivalent_target_num = target_num_dict["1格打2"]
+                tmp.TalentSkillData.equivalent_target_num = target_num_dict["1格打2"]
+                tmp.multi_target_desc = "天赋打%.2f" % target_num_dict["1格打2"]
+            char_dict[key] = tmp
+        elif name == "风笛" and skill_order == "2":
+            B, N, S = load_data(row)
+            tmp = TalentAtkBuff(name, skill_order, basic_info_dict=B, normal_info_dict=N, skill_info_dict=S)
+            tmp.replace_basic_attack()
+            tmp.NormalData.atk_up /= eval(row["Talent Dict"]).get("atk_scale", 1.0)
+            tmp.SkillData.atk_up /= eval(row["Talent Dict"]).get("atk_scale", 1.0)
+            tmp.SkillData.atk_times = 2
+            tmp.TalentSkillData.atk_times = 2
+            tmp.normal_trig_prob = eval(row["Talent Dict"]).get("prob", 0.0)
+            tmp.skill_trig_prob = eval(row["Talent Dict"]).get("prob", 0.0)
+            tmp.init_sp += eval(row["Talent Dict"]).get("sp", 0.0)
+            if multi_target:
+                tmp.TalentNormalData.equivalent_target_num = target_num_dict["1格打2"]
+                tmp.TalentSkillData.equivalent_target_num = target_num_dict["1格打2"]
+                tmp.multi_target_desc = "天赋打%.2f" % target_num_dict["1格打2"]
+            char_dict[key] = tmp
+        elif name == "风笛" and skill_order == "3":
+            B, N, S = load_data(row)
+            tmp = TalentAtkBuff(name, skill_order, basic_info_dict=B, normal_info_dict=N, skill_info_dict=S)
+            tmp.NormalData.atk_up /= eval(row["Talent Dict"]).get("atk_scale", 0.0)
+            tmp.SkillData.atk_up /= eval(row["Talent Dict"]).get("atk_scale", 0.0)
+            tmp.SkillData.atk_time_add_modifier -= eval(row["Skill Dict"]).get("base_attack_time", 0.0)
+            tmp.TalentSkillData.atk_time_add_modifier -= eval(row["Skill Dict"]).get("base_attack_time", 0.0)
+            tmp.SkillData.atk_time_mul_modifier = eval(row["Skill Dict"]).get("base_attack_time", 0.0)
+            tmp.TalentSkillData.atk_time_mul_modifier = eval(row["Skill Dict"]).get("base_attack_time", 0.0)
+            tmp.SkillData.atk_times = 3
+            tmp.TalentSkillData.atk_times = 3
+            tmp.normal_trig_prob = eval(row["Talent Dict"]).get("prob", 0.0)
+            tmp.skill_trig_prob = eval(row["Talent Dict"]).get("prob", 0.0)
+            tmp.init_sp += eval(row["Talent Dict"]).get("sp", 0.0)
+            if multi_target:
+                tmp.TalentNormalData.equivalent_target_num = target_num_dict["1格打2"]
+                tmp.TalentSkillData.equivalent_target_num = target_num_dict["1格打2"]
+                tmp.multi_target_desc = "天赋打%.2f" % target_num_dict["1格打2"]
             char_dict[key] = tmp
 
         # TODO: 辅助
@@ -3704,7 +4332,7 @@ def modify_data(f, stage, multi_target=False):
             B, N, S = load_data(row)
             tmp = CharacterData(name, skill_order, basic_info_dict=B, normal_info_dict=N, skill_info_dict=S)
             tmp.replace_basic_attack()
-            tmp.sp_recovery_block_time = 1.15
+            tmp.sp_recovery_block_time = 36 / 30
             if multi_target:
                 tmp.NormalData.equivalent_target_num = target_num_dict["1格打2"]
                 tmp.SkillData.equivalent_target_num = target_num_dict["1格打2"]
@@ -3713,8 +4341,8 @@ def modify_data(f, stage, multi_target=False):
         elif name == "阿消" and skill_order == "2":
             B, N, S = load_data(row)
             tmp = CharacterData(name, skill_order, basic_info_dict=B, normal_info_dict=N, skill_info_dict=S)
-            tmp.skill_duration = 1.0
-            tmp.sp_recovery_block_time = 1.0  # Wait for test
+            tmp.skill_duration = 36 / 30
+            tmp.sp_recovery_block_time = 36 / 30
             if multi_target:
                 tmp.NormalData.equivalent_target_num = target_num_dict["1格打2"]
                 tmp.SkillData.equivalent_target_num = target_num_dict["中半径圆溅射"]
@@ -3725,7 +4353,7 @@ def modify_data(f, stage, multi_target=False):
             B, N, S = load_data(row)
             tmp = CharacterData(name, skill_order, basic_info_dict=B, normal_info_dict=N, skill_info_dict=S)
             tmp.replace_basic_attack()
-            tmp.sp_recovery_block_time = 1.2
+            tmp.sp_recovery_block_time = 36 / 30
             if multi_target:
                 tmp.NormalData.equivalent_target_num = target_num_dict["1格打2"]
                 tmp.SkillData.equivalent_target_num = target_num_dict["1格打2"]
@@ -3734,8 +4362,42 @@ def modify_data(f, stage, multi_target=False):
         elif name == "食铁兽" and skill_order == "2":
             B, N, S = load_data(row)
             tmp = CharacterData(name, skill_order, basic_info_dict=B, normal_info_dict=N, skill_info_dict=S)
-            tmp.skill_duration = 1.0
-            tmp.sp_recovery_block_time = 0.8
+            tmp.skill_duration = 36 / 30
+            tmp.sp_recovery_block_time = 36 / 30
+            if multi_target:
+                tmp.NormalData.equivalent_target_num = target_num_dict["1格打2"]
+                tmp.SkillData.equivalent_target_num = target_num_dict["中半径圆溅射"]
+                tmp.generate_multi_target_desc()
+            char_dict[key] = tmp
+
+        elif name == "温蒂" and skill_order == "1":
+            B, N, S = load_data(row)
+            tmp = CharacterData(name, skill_order, basic_info_dict=B, normal_info_dict=N, skill_info_dict=S)
+            tmp.replace_basic_attack()
+            tmp.sp_recovery_block_time = 36 / 30
+            if multi_target:
+                tmp.NormalData.equivalent_target_num = target_num_dict["1格打2"]
+                tmp.SkillData.equivalent_target_num = target_num_dict["1格打2"]
+                tmp.generate_multi_target_desc()
+            char_dict[key] = tmp
+        elif name == "温蒂" and skill_order == "2":
+            B, N, S = load_data(row)
+            tmp = CharacterData(name, skill_order, basic_info_dict=B, normal_info_dict=N, skill_info_dict=S)
+            tmp.infinite_skill_duration()
+            tmp.SkillData.atk_time_add_modifier = 0
+            tmp.SkillData.atk_time_mul_modifier = eval(row["Skill Dict"]).get("base_attack_time", 0.0)
+            if multi_target:
+                tmp.NormalData.equivalent_target_num = target_num_dict["1格打2"]
+                tmp.SkillData.equivalent_target_num = target_num_dict["小半径圆溅射"]
+                tmp.generate_multi_target_desc()
+            char_dict[key] = tmp
+        elif name == "温蒂" and skill_order == "3":
+            B, N, S = load_data(row)
+            tmp = Weedy(name, skill_order, basic_info_dict=B, normal_info_dict=N, skill_info_dict=S)
+            tmp.SkillData.dmg_type = "magic"
+            tmp.skill_duration = 36 / 30
+            tmp.sp_recovery_block_time = 36 / 30
+            tmp.real_damage_by_shift = 2400  # 2 blocks
             if multi_target:
                 tmp.NormalData.equivalent_target_num = target_num_dict["1格打2"]
                 tmp.SkillData.equivalent_target_num = target_num_dict["中半径圆溅射"]
@@ -3893,6 +4555,7 @@ def modify_data(f, stage, multi_target=False):
 # Plot Color Config
 color_dict = {
     "缠丸": "turquoise",
+    "断罪者": "#FFF064",
     "芙兰卡": "darkgoldenrod",
     "炎客": "darkorange",
     "斯卡蒂": "lightsteelblue",
@@ -3900,6 +4563,7 @@ color_dict = {
     "诗怀雅": "wheat",
     "慕斯": "tan",
     "星极": "gold",
+    "铸铁": "lightskyblue",
     "霜叶": "darkred",
     "拉普兰德": "silver",
     "银灰": "skyblue",
@@ -3908,7 +4572,10 @@ color_dict = {
     "幽灵鲨": "slateblue",
     "布洛卡": "y",
     "煌": "crimson",
+    "宴": "mediumslateblue",
     "赫拉格": "darkkhaki",
+    "刻刀": "indianred",
+    "柏喙": "mediumturquoise",
     "陈": "mediumvioletred",
     "猎蜂": "indianred",
     "因陀罗": "dimgray",
@@ -3917,11 +4584,13 @@ color_dict = {
     "夜魔": "darkkhaki",
     "阿米娅": "#400010",
     "艾雅法拉": "tomato",
+    "刻俄柏": "goldenrod",
     "格雷伊": "yellow",
     "远山": "lightpink",
     "天火": "coral",
     "莫斯提马": "slateblue",
     "伊芙利特": "sandybrown",
+    "惊蛰": "blueviolet",
 
     "杰西卡": "deeppink",
     "流星": "palegreen",
@@ -3933,6 +4602,8 @@ color_dict = {
     "能天使": "antiquewhite",
     "白雪": "slategray",
     "陨星": "sandybrown",
+    "慑砂": "mediumorchid",
+    "W": "#DC1446",
     "普罗旺斯": "mediumslateblue",
     "普罗旺斯(正前方一格)": "slateblue",
     "黑": "palevioletred",
@@ -3948,9 +4619,11 @@ color_dict = {
     "讯使": "#CDC5BF",
     "凛冬": "brown",
     "桃金娘": "thistle",
+    "极境": "maroon",
     "红豆": "lightcoral",
     "格拉尼": "lightblue",
     "苇草": "peachpuff",
+    "风笛": "burlywood",
 
     "地灵": "purple",
     "真理": "rosybrown",
@@ -3966,6 +4639,7 @@ color_dict = {
 
     "阿消": "orange",
     "食铁兽": "black",
+    "温蒂": "darkolivegreen",
     "暗索": "cornflowerblue",
     "崖心": "yellowgreen",
     "雪雉": "gainsboro",
